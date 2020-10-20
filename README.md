@@ -2,4 +2,4 @@
 
 # Informe
 
-[Informe](!https://www.overleaf.com/1441128557zthcvkstrsjd)
+[Informe](https://www.overleaf.com/1441128557zthcvkstrsjd)
