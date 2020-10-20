@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stddef.h>
 #define RBUFFER 1024
 #define ERROR -1
 #define MASK 0xFF
@@ -10,6 +11,28 @@ long decodeLetterAndShift(char letter, int multiplier);
 
 int main(){
 	decode("input.txt", "output.txt");
+}
+
+/*	This function decodes from base64 into text (ASCII).
+ * 	source: 4 caracters to decode from base64 to ASCII.
+ * 	source_len: It should be always 4.
+ * 	buffer: The 4 original caracteres decoded into 3 ASCII caracters.
+ * 	buffer_len: It should be always 3.
+ */ 
+int decode(char* source, size_t source_len, char* buffer, size_t buffer_len){
+	long phrase = 0;
+	// Decode letter by letter and shift. Then add to the phrase.
+	for (int position = 0; position < 4; position ++){
+		long decodeValue = decodeLetterAndShift(source[position], 3 - position);
+		if (decodeValue == ERROR)
+			return -1;
+		phrase = phrase + decodeValue;
+	}
+	// Generate letter by letter from the phrase
+	for (int position = 0; position < 3; position ++){
+		long decodeLetter = phrase >> (2 - position) * 8 & 0xFF;
+		buffer[position] = decodeLetter;
+	}
 }
 
 int decode(char* inputFilePath, char* outputFilePath){
