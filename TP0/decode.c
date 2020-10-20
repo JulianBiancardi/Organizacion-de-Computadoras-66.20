@@ -1,96 +1,30 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <stddef.h>
-#define RBUFFER 1024
+#include "decode.h"
 #define ERROR -1
 #define MASK 0xFF
 
-int decode(char* inputFilePath, char* outputFilePath);
-int decodeValueLetter(char letter);
-long decodeLetterAndShift(char letter, int multiplier);
+static long decodeLetterAndShift(char letter, int shiftValue);
+static int decodeValueLetter(char letter);
 
-int main(){
-	decode("input.txt", "output.txt");
-}
-
-/*	This function decodes from base64 into text (ASCII).
- * 	source: 4 caracters to decode from base64 to ASCII.
- * 	source_len: It should be always 4.
- * 	buffer: The 4 original caracteres decoded into 3 ASCII caracters.
- * 	buffer_len: It should be always 3.
- */ 
-int decode(char* source, size_t source_len, char* buffer, size_t buffer_len){
+int decode(char* source, char* buffer){
 	long phrase = 0;
 	// Decode letter by letter and shift. Then add to the phrase.
 	for (int position = 0; position < 4; position ++){
 		long decodeValue = decodeLetterAndShift(source[position], 3 - position);
 		if (decodeValue == ERROR)
-			return -1;
+			return ERROR;
 		phrase = phrase + decodeValue;
 	}
 	// Generate letter by letter from the phrase
 	for (int position = 0; position < 3; position ++){
-		long decodeLetter = phrase >> (2 - position) * 8 & 0xFF;
+		long decodeLetter = phrase >> (2 - position) * 8 & MASK;
 		buffer[position] = decodeLetter;
 	}
-}
-
-int decode(char* inputFilePath, char* outputFilePath){
-	FILE* inputFile = fopen(inputFilePath, "r");
-	if (!inputFile){
-		printf("No se pudo abrir el archivo codificado");
-		return ERROR;
-	}
-	FILE* outputFile = fopen(outputFilePath, "w");
-	if (!outputFile){
-		printf("No se pudo abrir el archivo codificado");
-		fclose(inputFile);
-		return ERROR;
-	}
-	// Lectura del archivo. El codificado es una sola linea. 
-	char data[RBUFFER];
-	int readSuccess = fscanf(inputFile, "%[^\n]\n",data);
-	if (!readSuccess){
-		printf("Error reading file");
-		fclose(inputFile);
-		fclose(outputFile);
-		return ERROR;
-	}
-	
-	int position = 0;
-	while(data[position] != EOF && data[position] !=  '\n'){
-		/* Se toman 4 letras codificadas y se las ordena para armar
-		el binario con el cual se debe decodificar */
-		long first = decodeLetterAndShift(data[position], 3);
-		long second = decodeLetterAndShift(data[position + 1], 2);
-		long third = decodeLetterAndShift(data[position + 2], 1);
-		long fourth = decodeLetterAndShift(data[position + 3], 0);
-		if (first == ERROR || second == ERROR || third == ERROR || fourth == ERROR)
-			return ERROR;
-		// La frase binaria es el resultado de la suma de las 4 letras decodificadas.
-		long binaryPhrase = first + second + third + fourth;
-		// Ahora obtengo las 3 letras decodificadas. (Limpio con mascara binara de 8 bits en 1)
-		first = binaryPhrase >> 2*8 & MASK;
-		second = binaryPhrase >> 1*8 & MASK;
-		third = binaryPhrase & MASK;
-		// Guardo siempre y cuando el caracter no sea null.
-		if(first)
-			fputc((char) first, outputFile);
-		if(second)
-			fputc((char) second, outputFile);
-		if(third)
-			fputc((char) third, outputFile);
-		position = position + 4;
-		printf("Data in position (%d) is: %c\n",position, data[position]);
-	};
-	
-	fclose(inputFile);
-	fclose(outputFile);
 	return 0;
 }
 
-
-long decodeLetterAndShift(char letter, int shiftValue){
+static long decodeLetterAndShift(char letter, int shiftValue){
 	if(letter == '=')
 		return 0;
 	int decodedLetter = decodeValueLetter(letter);
@@ -101,8 +35,7 @@ long decodeLetterAndShift(char letter, int shiftValue){
 	return (long) decodedLetter << 6 * shiftValue;
 }
 	
-
-int decodeValueLetter(char letter){
+static int decodeValueLetter(char letter){
 	int intLetter = (int) letter;
 	if (intLetter >= (int) 'A' && intLetter <= (int) 'Z')
 		return intLetter - (int) 'A';
