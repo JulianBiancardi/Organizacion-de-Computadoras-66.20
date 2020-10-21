@@ -22,7 +22,7 @@ void get_arguments(int argc, char** argv, char* input_file, char* output_file,
   *encode = false; // False unless found
 
   while (true) {
-    int opt = getopt_long(argc, argv, "Vhiod", arguments, NULL);
+    int opt = getopt_long(argc, argv, "Vhi:o:d", arguments, NULL);
     if (opt == -1) {
       break;
     }
@@ -60,7 +60,7 @@ void static print_help() {
   printf("\ttp0 -V\n");
   printf("\ttp0 [options]\n");
 
-  printf("Options:\n\n");
+  printf("\nOptions:\n\n");
 
   printf("\t-V, --version\t\tPrint version and quit.\n");
   printf("\t-h, --help\t\tPrint this information.\n");
@@ -68,7 +68,7 @@ void static print_help() {
   printf("\t-i, --input\t\tPath to input file.\n");
   printf("\t-d, --decode\t\tDecode a base64-encoded file.\n");
 
-  printf("Examples:\n\n");
+  printf("\nExamples:\n\n");
 
   printf("\ttp0 -i input.txt -o output.txt\n");
 }

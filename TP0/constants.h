@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define VERSION 6
+#define VERSION 8
 
 // Error codes
 #define ERROR -1
