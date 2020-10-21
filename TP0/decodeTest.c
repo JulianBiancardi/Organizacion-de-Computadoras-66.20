@@ -9,8 +9,8 @@ int testDecode(char* input, char* expectedOutput);
 
 int main() {
   printf("Start Testing Decode\n");
-  int success = testDecode("TWFu", "Man");
-  success = success & testDecode("ZQ==", "e");
+  int success = testDecode("RW4g", "Man");
+  success = success & testDecode("dW4g", "e");
   success = success & testDecode("ZS4=", "e.");
   if (success)
     printf("Tests: OK\n");
