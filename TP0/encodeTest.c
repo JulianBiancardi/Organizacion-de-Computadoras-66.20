@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "encode.h"
+#include "base64.h"
 
 void testEncode(char* input, char* expectedOutput, size_t source_len);
 
