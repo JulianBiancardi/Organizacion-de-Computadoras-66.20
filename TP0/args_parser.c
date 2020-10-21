@@ -3,6 +3,7 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "constants.h"
 
@@ -18,10 +19,10 @@ void get_arguments(int argc, char** argv, char* input_file, char* output_file,
                                       {"decode", no_argument, NULL, 'd'},
                                       {NULL, 0, NULL, 0}};
 
-  *encode = false;
+  *encode = false; // False unless found
 
   while (true) {
-    int opt = getopt(argc, argv, "Vhiod");
+    int opt = getopt_long(argc, argv, "Vhiod", arguments, NULL);
     if (opt == -1) {
       break;
     }
@@ -35,10 +36,14 @@ void get_arguments(int argc, char** argv, char* input_file, char* output_file,
         exit(0);
         break;
       case 'o':
+        printf("OUT\n");
         strncpy(output_file, optarg, sizeof(char) * FILE_NAME_MAX_LEN);
         break;
       case 'i':
-        strncpy(output_file, optarg, sizeof(char) * FILE_NAME_MAX_LEN);
+        printf("HERE\n");
+        fprintf(stderr, "%s\n", input_file);
+        fprintf(stderr, "%s\n", optarg);
+        strncpy(input_file, optarg, sizeof(char) * FILE_NAME_MAX_LEN);
         break;
       case 'd':
         *encode = true;
@@ -50,7 +55,7 @@ void get_arguments(int argc, char** argv, char* input_file, char* output_file,
   }
 }
 
-void static print_version() { printf("Version: %d", VERSION); }
+void static print_version() { printf("Version: %d\n", VERSION); }
 
 void static print_help() {
   printf("Usage:\n\n");

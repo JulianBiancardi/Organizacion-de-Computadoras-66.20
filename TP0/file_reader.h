@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-typedef int (*file_reader_callback_t)(char* buffer, size_t* buffer_len,
+typedef int (*file_reader_callback_t)(char* buffer, size_t buffer_len,
                                       void* context);
 
 typedef struct file_reader {

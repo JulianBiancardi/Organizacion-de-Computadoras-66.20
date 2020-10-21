@@ -3,11 +3,7 @@
 
 #include <stdlib.h>
 
-#define SUCCED 0
-#define ERROR -1
-
-#define SOURCE_LEN 3
-#define OUTPUT_LEN 4
+#include "constants.h"
 
 #define ENCODE_MASK 0x3F
 #define DECODE_MASK 0xFF
@@ -26,9 +22,9 @@ static char _encodeValue(long value) {
 static long _generate_phrase(const char *source, size_t len) {
   long phrase = 0;
   // Encode letter by letter and shift. Then add to the phrase.
-  for (size_t pos = 0; pos < SOURCE_LEN; pos++) {
+  for (size_t pos = 0; pos < DECODED_LEN; pos++) {
     unsigned char octet = pos < len ? (unsigned char)source[pos] : 0;
-    int shiftValue = (SOURCE_LEN - 1) - pos;
+    int shiftValue = (DECODED_LEN - 1) - pos;
     phrase += octet << 8 * shiftValue;
   }
   return phrase;
@@ -67,30 +63,30 @@ int encode64(char *source, size_t source_len, char *buffer) {
   long phrase = _generate_phrase(source, source_len);
 
   // Generate letter by letter from the phrase
-  for (size_t pos = 0; pos < OUTPUT_LEN; pos++) {
-    long value = phrase >> (SOURCE_LEN - pos) * 6 & ENCODE_MASK;
+  for (size_t pos = 0; pos < ENCODED_LEN; pos++) {
+    long value = phrase >> (DECODED_LEN - pos) * 6 & ENCODE_MASK;
     buffer[pos] = _encodeValue(value);
   }
 
-  for (size_t pos = source_len + 1; pos < OUTPUT_LEN; pos++) {
+  for (size_t pos = source_len + 1; pos < ENCODED_LEN; pos++) {
     buffer[pos] = '=';
   }
 
-  return SUCCED;
+  return NO_ERROR;
 }
 
 int decode64(char *source, char *buffer) {
   long phrase = 0;
   // Decode letter by letter and shift. Then add to the phrase.
-  for (size_t position = 0; position < OUTPUT_LEN; position++) {
+  for (size_t position = 0; position < ENCODED_LEN; position++) {
     long decodeValue = _decodeLetterAndShift(source[position], 3 - position);
     if (decodeValue == ERROR) return ERROR;
     phrase = phrase + decodeValue;
   }
   // Generate letter by letter from the phrase
-  for (size_t position = 0; position < SOURCE_LEN; position++) {
+  for (size_t position = 0; position < DECODED_LEN; position++) {
     long decodeLetter = phrase >> (2 - position) * 8 & DECODE_MASK;
     buffer[position] = decodeLetter;
   }
-  return SUCCED;
+  return NO_ERROR;
 }
