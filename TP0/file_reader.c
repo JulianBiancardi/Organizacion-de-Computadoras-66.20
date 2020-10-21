@@ -26,6 +26,7 @@ int file_reader_process(file_reader_t* self, file_reader_callback_t callback,
       return ERROR;
     }
   }
+  return NO_ERROR;
 }
 
 void file_reader_destroy(file_reader_t* self) {

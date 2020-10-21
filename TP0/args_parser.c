@@ -36,13 +36,9 @@ void get_arguments(int argc, char** argv, char* input_file, char* output_file,
         exit(0);
         break;
       case 'o':
-        printf("OUT\n");
         strncpy(output_file, optarg, sizeof(char) * FILE_NAME_MAX_LEN);
         break;
       case 'i':
-        printf("HERE\n");
-        fprintf(stderr, "%s\n", input_file);
-        fprintf(stderr, "%s\n", optarg);
         strncpy(input_file, optarg, sizeof(char) * FILE_NAME_MAX_LEN);
         break;
       case 'd':

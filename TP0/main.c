@@ -27,10 +27,10 @@ int main(int argc, char** argv) {
   } else {
     result = file_reader_process(&file_reader, encode_and_output, &file_writer);
   }
-
+  
   file_writer_destroy(&file_writer);
   file_reader_destroy(&file_reader);
-  return NO_ERROR;
+  return result;
 }
 
 #include "base64.h"
@@ -44,7 +44,7 @@ int encode_and_output(char* source, size_t source_len, void* extra) {
   char encoded_text[ENCODED_LEN];
 
   int ptr = 0;
-  for (ptr; ptr < source_len; ptr += 3) {
+  for (ptr; ptr < source_len; ptr += DECODED_LEN) {
     // Move the head of the pointer, encode up to 3 bytes
     if (encode64(source+ptr, min(source_len - ptr, DECODED_LEN), encoded_text) == ERROR) {
       return ERROR;
@@ -60,7 +60,7 @@ int decode_and_output(char* source, size_t source_len, void* extra) {
   char decoded_text[DECODED_LEN];
 
   int ptr = 0;
-  for (ptr; ptr < source_len; ptr += 3) {
+  for (ptr; ptr < source_len; ptr += ENCODED_LEN) {
     // Move the head of the pointer, decode 4 bytes
     if (decode64(source+ptr, decoded_text) == ERROR) {
       return ERROR;
