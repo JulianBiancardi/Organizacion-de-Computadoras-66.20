@@ -76,20 +76,20 @@ int encode64(char *source, size_t source_len, char *buffer) {
   return NO_ERROR;
 }
 
-int decode64(char *source, char *buffer) {
+ssize_t decode64(char *source, char *buffer) {
   long phrase = 0;
+  ssize_t chars_decoded = 0;
   // Decode letter by letter and shift. Then add to the phrase.
   for (size_t position = 0; position < ENCODED_LEN; position++) {
     long decodeValue = _decodeLetterAndShift(source[position], 3 - position);
-    if (decodeValue == ERROR) return ERROR;
+    if (decodeValue == ERROR) { return ERROR;}
     phrase = phrase + decodeValue;
   }
   // Generate letter by letter from the phrase
-  int bufferSize = 3;
   for (size_t position = 0; position < DECODED_LEN; position++) {
     long decodeLetter = phrase >> (2 - position) * 8 & DECODE_MASK;
-    if (decodeLetter != 0) bufferSize--;
-	buffer[position] = decodeLetter;
+    if (decodeLetter != 0) { chars_decoded++;}
+    buffer[position] = decodeLetter;
   }
-  return bufferSize;
+  return chars_decoded;
 }

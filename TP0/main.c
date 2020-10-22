@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
   } else {
     result = file_reader_process(&file_reader, encode_and_output, &file_writer);
   }
-  
+
   file_writer_destroy(&file_writer);
   file_reader_destroy(&file_reader);
   return result;
@@ -62,10 +62,11 @@ int decode_and_output(char* source, size_t source_len, void* extra) {
   int ptr = 0;
   for (ptr; ptr < source_len; ptr += ENCODED_LEN) {
     // Move the head of the pointer, decode 4 bytes
-    if (decode64(source+ptr, decoded_text) == ERROR) {
+    ssize_t chars_read = decode64(source+ptr, decoded_text);
+    if (chars_read == ERROR) { 
       return ERROR;
     }
-    file_writer_write(file_writer, decoded_text, DECODED_LEN);
+    file_writer_write(file_writer, decoded_text, chars_read);
   }
 
   return NO_ERROR;
