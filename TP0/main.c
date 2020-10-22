@@ -43,8 +43,7 @@ int encode_and_output(char* source, size_t source_len, void* extra) {
   file_writer_t* file_writer = (file_writer_t*)extra;
   char encoded_text[ENCODED_LEN];
 
-  int ptr = 0;
-  for (ptr; ptr < source_len; ptr += DECODED_LEN) {
+  for (int ptr = 0; ptr < source_len; ptr += DECODED_LEN) {
     // Move the head of the pointer, encode up to 3 bytes
     if (encode64(source+ptr, min(source_len - ptr, DECODED_LEN), encoded_text) == ERROR) {
       return ERROR;
@@ -59,8 +58,7 @@ int decode_and_output(char* source, size_t source_len, void* extra) {
   file_writer_t *file_writer = (file_writer_t*)extra;
   char decoded_text[DECODED_LEN];
 
-  int ptr = 0;
-  for (ptr; ptr < source_len; ptr += ENCODED_LEN) {
+  for (int ptr = 0; ptr < source_len; ptr += ENCODED_LEN) {
     // Move the head of the pointer, decode 4 bytes
     ssize_t chars_read = decode64(source+ptr, decoded_text);
     if (chars_read == ERROR) { 
