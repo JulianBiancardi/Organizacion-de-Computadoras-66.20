@@ -14,7 +14,7 @@ int main() {
 		{"ZS4=","e."}};
 	int success = 1;
 	for (int i = 0; i < TESTS; i++)
-		success = success & testDecode(dataMap[i][0], dataMap[i][1]);
+		success = success && testDecode(dataMap[i][0], dataMap[i][1]);
 	if (success)
 		printf("Tests: OK\n");
 	else
