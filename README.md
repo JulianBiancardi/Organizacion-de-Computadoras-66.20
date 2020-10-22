@@ -1,8 +1,10 @@
 # Organizasion-de-Computadoras-66.20
 
-## Repositorio para la Materia Organización de Computadoras [6620]
+## **Facultad de Ingeniería | Organización de Computadoras | Curso 2**
 
-**Facultad de Ingeniería | Organización de Computadoras | Curso 2**
+### **Grupo 16**
+
+Repositorio para la Materia Organización de Computadoras [6620]
 
 # Integrantes
 
