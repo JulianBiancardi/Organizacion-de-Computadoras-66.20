@@ -1,12 +1,9 @@
-CC=gcc
+CC = gcc
 
-binaries=args_parser.o base64.o file_reader.o file_writer.o main.o
+SOURCES = $(wildcard src/main/*.c)
 
-.PHONY: all clean
-all: tp0 clean
+.PHONY: all
+all: tp0
 
-tp0: $(binaries)
-	$(CC) $(binaries) -o tp0
-
-clean:
-	rm $(binaries) 
+tp0: $(SOURCES)
+	$(CC) $(SOURCES) -o tp0
