@@ -2,6 +2,7 @@
 #include "base64.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "constants.h"
 
@@ -84,9 +85,11 @@ int decode64(char *source, char *buffer) {
     phrase = phrase + decodeValue;
   }
   // Generate letter by letter from the phrase
+  int bufferSize = 3;
   for (size_t position = 0; position < DECODED_LEN; position++) {
     long decodeLetter = phrase >> (2 - position) * 8 & DECODE_MASK;
-    buffer[position] = decodeLetter;
+    if (decodeLetter != 0) bufferSize--;
+	buffer[position] = decodeLetter;
   }
-  return NO_ERROR;
+  return bufferSize;
 }
