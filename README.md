@@ -1,4 +1,4 @@
-# Organizasion-de-Computadoras-66.20
+# Organizacion-de-Computadoras-66.20
 
 ## **Facultad de Ingeniería | Organización de Computadoras | Curso 2**
 
