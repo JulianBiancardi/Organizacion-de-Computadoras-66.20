@@ -30,6 +30,8 @@ unsigned int mcd(unsigned int m, unsigned int n)
 hoja
 -- gp no se necesita ya que no hay variables globales pero hay que tenerlo
 
+#include <sys/regdef.h>
+
 #define SS 24 //stack size multiplo de 8
 //SRA
 #define O_FP 20
@@ -40,6 +42,7 @@ hoja
 #define O_A1 8
 #define O_R0 4
 #define O_R1 0
+#define O_AUX 0
 
 .tex
 .aling 2
@@ -53,24 +56,29 @@ mcd:
   sw gp, O_GP(gp)
   move fp, sp
 
+
   sw a0, O_A0(fp)
   sw a1, O_A1(fp)
-
+//-------LTA-------//
   lw t0, O_A0(fp)
   sw t0, O_R0(fp)
 
   lw t0, O_A1(fp)
   sw t0, O_R1(fp)
 
+  lw t0, O_R0(fp) //obtengo r0 en t0
+  lw t1, O_R1(fp) //obtengo r1 en t1
+  lw t2, O_AUX(fp) //obtengo aux en t1
 while:
+  bez $t1 return
+  add $t2, $t0, $zero // aux = r0
+  add $t0, $t1, $zero // r0  = r1
+  ....... // r1  = aux % r1
+  ba while
 
+return:
 
-end_while:
-
-
-retur:
-
-  li v0,0
+  li v0,r0 //devuelvo r0 No se si esta bien asi
 
   lw fp, O_FP(sp)
   lw gp, O_GP(sp)
