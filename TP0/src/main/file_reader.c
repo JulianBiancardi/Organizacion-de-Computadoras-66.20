@@ -6,7 +6,7 @@
 #include "constants.h"
 
 // Must be a multiple of both 3 and 4 to avoid mistakes during translation
-#define BUFFER_LEN 12 
+#define BUFFER_LEN 12
 
 int file_reader_init(file_reader_t* self, char* file_name) {
   if (strcmp(file_name, "stdin") == 0) {
