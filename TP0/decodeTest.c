@@ -15,10 +15,10 @@ int main() {
   char* dataMap[TESTS][2] = {{"TWFu", "Man"}, {"ZQ==", "e"}, {"ZS4=", "e."}};
   char* errorCases[NEGATIVE_TESTS] = {"ab", "!|°'", "ABC", "[¿.)"};
   int success = 1;
-  for (int i = 0; i < TESTS; i++)
-    success = success && testDecode(dataMap[i][0], dataMap[i][1]);
   for (int i = 0; i < NEGATIVE_TESTS; i++)
     success = success && testErrorCases(errorCases[i]);
+  for (int i = 0; i < TESTS; i++)
+    success = success && testDecode(dataMap[i][0], dataMap[i][1]);
   if (success)
     printf("Tests: OK\n");
   else
