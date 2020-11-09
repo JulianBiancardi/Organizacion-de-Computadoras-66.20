@@ -37,12 +37,13 @@ hoja
 #define O_FP 20
 #define O_GP 16
 
-//LTA  4*4 = 16 bytes multiplo de 8
-#define O_A0 12
-#define O_A1 8
-#define O_R0 4
-#define O_R1 0
-#define O_AUX 0
+//LTA
+#define O_R0 0
+#define O_R1 4
+#define O_AUX 8
+
+#define O_A0 (SS)
+#define O_A1 (O_A0 + 4)
 
 .tex
 .aling 2
@@ -77,9 +78,9 @@ while:
   ba while
 
 return:
-
   li v0,r0 //devuelvo r0 No se si esta bien asi
 
+//----Stack unwinding----//
   lw fp, O_FP(sp)
   lw gp, O_GP(sp)
   addiu sp,sp,SS
