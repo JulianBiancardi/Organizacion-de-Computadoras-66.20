@@ -7,13 +7,20 @@
 	.abicalls
 	.rdata
 	.align	2
-$LC0:
-	.ascii	"stdin\000"
-	.space	26
+$LC2:
+	.ascii	"El archivo indicado para lectura no existe.\000"
+	.align	2
+$LC3:
+	.ascii	"Error procesando el archivo de entrada. Un caracter no p"
+	.ascii	"udo ser decodificado.\000"
 	.align	2
 $LC1:
 	.ascii	"stdout\000"
 	.space	25
+	.align	2
+$LC0:
+	.ascii	"stdin\000"
+	.space	26
 	.text
 	.align	2
 	.globl	main
@@ -89,6 +96,35 @@ main:
 	nop
 
 	lw	$28,24($fp)
+	addiu	$2,$fp,36
+	li	$5,4			# 0x4
+	move	$4,$2
+	lw	$2,%call16(access)($28)
+	move	$25,$2
+	.reloc	1f,R_MIPS_JALR,access
+1:	jalr	$25
+	nop
+
+	lw	$28,24($fp)
+	move	$3,$2
+	li	$2,-1			# 0xffffffffffffffff
+	bne	$3,$2,$L2
+	nop
+
+	lw	$2,%got($LC2)($28)
+	addiu	$4,$2,%lo($LC2)
+	lw	$2,%call16(puts)($28)
+	move	$25,$2
+	.reloc	1f,R_MIPS_JALR,puts
+1:	jalr	$25
+	nop
+
+	lw	$28,24($fp)
+	li	$2,-1			# 0xffffffffffffffff
+	b	$L7
+	nop
+
+$L2:
 	addiu	$3,$fp,36
 	addiu	$2,$fp,104
 	move	$5,$3
@@ -112,7 +148,7 @@ main:
 
 	lw	$28,24($fp)
 	lbu	$2,100($fp)
-	beq	$2,$0,$L2
+	beq	$2,$0,$L4
 	nop
 
 	addiu	$2,$fp,108
@@ -129,10 +165,10 @@ main:
 
 	lw	$28,24($fp)
 	sw	$2,32($fp)
-	b	$L3
+	b	$L5
 	nop
 
-$L2:
+$L4:
 	addiu	$2,$fp,108
 	addiu	$3,$fp,104
 	move	$6,$2
@@ -147,7 +183,7 @@ $L2:
 
 	lw	$28,24($fp)
 	sw	$2,32($fp)
-$L3:
+$L5:
 	addiu	$2,$fp,108
 	move	$4,$2
 	lw	$2,%call16(file_writer_destroy)($28)
@@ -166,7 +202,38 @@ $L3:
 	nop
 
 	lw	$28,24($fp)
+	lw	$3,32($fp)
+	li	$2,-1			# 0xffffffffffffffff
+	bne	$3,$2,$L6
+	nop
+
+	lw	$2,%got($LC3)($28)
+	addiu	$4,$2,%lo($LC3)
+	lw	$2,%call16(puts)($28)
+	move	$25,$2
+	.reloc	1f,R_MIPS_JALR,puts
+1:	jalr	$25
+	nop
+
+	lw	$28,24($fp)
+	addiu	$3,$fp,68
+	lw	$2,%got($LC1)($28)
+	addiu	$2,$2,%lo($LC1)
+	beq	$3,$2,$L6
+	nop
+
+	addiu	$2,$fp,68
+	move	$4,$2
+	lw	$2,%call16(remove)($28)
+	move	$25,$2
+	.reloc	1f,R_MIPS_JALR,remove
+1:	jalr	$25
+	nop
+
+	lw	$28,24($fp)
+$L6:
 	lw	$2,32($fp)
+$L7:
 	move	$sp,$fp
 	lw	$31,116($sp)
 	lw	$fp,112($sp)
@@ -233,10 +300,10 @@ encode_and_output:
 	lw	$2,64($fp)
 	sw	$2,28($fp)
 	sw	$0,24($fp)
-	b	$L8
+	b	$L11
 	nop
 
-$L11:
+$L14:
 	lw	$2,24($fp)
 	lw	$3,56($fp)
 	addu	$16,$3,$2
@@ -267,14 +334,14 @@ $L11:
 	lw	$28,16($fp)
 	move	$3,$2
 	li	$2,-1			# 0xffffffffffffffff
-	bne	$3,$2,$L9
+	bne	$3,$2,$L12
 	nop
 
 	li	$2,-1			# 0xffffffffffffffff
-	b	$L12
+	b	$L15
 	nop
 
-$L9:
+$L12:
 	addiu	$2,$fp,32
 	li	$6,4			# 0x4
 	move	$5,$2
@@ -289,15 +356,15 @@ $L9:
 	lw	$2,24($fp)
 	addiu	$2,$2,3
 	sw	$2,24($fp)
-$L8:
+$L11:
 	lw	$3,24($fp)
 	lw	$2,60($fp)
 	sltu	$2,$3,$2
-	bne	$2,$0,$L11
+	bne	$2,$0,$L14
 	nop
 
 	move	$2,$0
-$L12:
+$L15:
 	move	$sp,$fp
 	lw	$31,52($sp)
 	lw	$fp,48($sp)
@@ -333,10 +400,10 @@ decode_and_output:
 	lw	$2,56($fp)
 	sw	$2,28($fp)
 	sw	$0,24($fp)
-	b	$L14
+	b	$L17
 	nop
 
-$L17:
+$L20:
 	lw	$2,24($fp)
 	lw	$3,48($fp)
 	addu	$2,$3,$2
@@ -353,14 +420,14 @@ $L17:
 	sw	$2,32($fp)
 	lw	$3,32($fp)
 	li	$2,-1			# 0xffffffffffffffff
-	bne	$3,$2,$L15
+	bne	$3,$2,$L18
 	nop
 
 	li	$2,-1			# 0xffffffffffffffff
-	b	$L18
+	b	$L21
 	nop
 
-$L15:
+$L18:
 	lw	$3,32($fp)
 	addiu	$2,$fp,36
 	move	$6,$3
@@ -376,15 +443,15 @@ $L15:
 	lw	$2,24($fp)
 	addiu	$2,$2,4
 	sw	$2,24($fp)
-$L14:
+$L17:
 	lw	$3,24($fp)
 	lw	$2,52($fp)
 	sltu	$2,$3,$2
-	bne	$2,$0,$L17
+	bne	$2,$0,$L20
 	nop
 
 	move	$2,$0
-$L18:
+$L21:
 	move	$sp,$fp
 	lw	$31,44($sp)
 	lw	$fp,40($sp)
