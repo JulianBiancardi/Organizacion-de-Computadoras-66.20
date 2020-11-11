@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 #include "args_parser.h"
-#include "constants.h"
+#include "constantsTP1.h"
 #include "file_writer.h"
 
 #define ARGV_M 4
@@ -27,9 +27,9 @@ int main(int argc, char** argv) {
 
   unsigned int result;
   if (divisor == true) {
-    result = mcm(m, n);
-  } else {
     result = mcd(m, n);
+  } else {
+    result = mcm(m, n);
   }
 
   file_writer_write(&file_writer, result, );

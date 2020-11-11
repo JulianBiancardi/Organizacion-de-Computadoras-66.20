@@ -10,6 +10,6 @@
 #define FILE_NAME_MAX_LEN 32
 
 #define RANGE_MIN 2
-#define RANGE_MAX MAXINT
+#define RANGE_MAX 4294967295  // No se si es MAXINT O MAXUINT
 
 #endif

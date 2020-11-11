@@ -4,9 +4,8 @@
 #include <stdbool.h>
 
 /* Receives argc and argv and processes the command to make a decision.
- * If an input file is selected, it is put into input_file.
  * If an output file is selected, it is put into output_file.
- * If the program was signaled to encode, then encode is true.
+ * If the program was signaled to calculate the mcd, then divisor is true.
  * Otherwise, it is set to false.
  *
  * If an argument of the command is not recognized, the program will be
