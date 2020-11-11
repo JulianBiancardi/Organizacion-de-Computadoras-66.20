@@ -6,30 +6,34 @@
 #include "constants.h"
 #include "file_writer.h"
 
+#define ARGV_M 4
+#define ARGV_N 5
+
 int main(int argc, char** argv) {
   char output_file[FILE_NAME_MAX_LEN] = "stdout";
   bool divisor;
+  unsigned int m = argv[ARGV_M];
+  unsigned int n = argv[ARGV_N];
+  if (m < RANGE_MIN || m > RANGE_MAX) {
+    return ERROR;
+  }
+  if (n < RANGE_MIN || n > RANGE_MAX) {
+    return ERROR;
+  }
   get_arguments(argc, argv, output_file, &divisor);
 
   file_writer_t file_writer;
   file_writer_init(&file_writer, output_file);
 
-  int result;
+  unsigned int result;
   if (divisor == true) {
-    result = file_reader_process(&file_reader, decode_and_output, &file_writer);
+    result = mcm(m, n);
   } else {
-    result = file_reader_process(&file_reader, encode_and_output, &file_writer);
+    result = mcd(m, n);
   }
 
+  file_writer_write(&file_writer, result, );
   file_writer_destroy(&file_writer);
 
-  if (result == ERROR) {
-    printf(
-        "Error procesando el archivo de entrada. Un caracter no pudo ser "
-        "decodificado.\n");
-    if (output_file != "stdout") {
-      remove(output_file);
-    }
-  }
-  return result;
+  return NO_ERROR;
 }
