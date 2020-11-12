@@ -10,7 +10,6 @@ extern unsigned int mcm(unsigned int, unsigned int);
 
 int main(int argc, char** argv) {
   FILE* output;
-  // char output_file[FILE_NAME_MAX_LEN];
   unsigned int x, y;
   bool mcm_bool, mcd_bool;
   if (get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool) !=
