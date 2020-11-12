@@ -25,5 +25,9 @@ unsigned int mcd(unsigned int m, unsigned int n) {
 }
 
 unsigned int mcm(unsigned int m, unsigned int n) {
+  unsigned int a = m * n;
+  unsigned int b = mcd(m, n);
+  unsigned int c = a / b;
+  return c;
   return ((m * n) / mcd(m, n));
 }

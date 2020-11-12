@@ -9,6 +9,7 @@
 #define O_A0 (SS)
 #define O_A1 (O_A0 + 4)
 
+.extern mcd
 .text
 .align 2
 .globl mcm
@@ -16,23 +17,26 @@
 
 mcm:
 
-  subu sp,sp,SS
-  sw fp, O_FP(sp)
-  sw gp, O_GP(sp)
-  move fp, sp
+  subu  sp,sp,SS
+  sw    fp, O_FP(sp)
+  sw    gp, O_GP(sp)
+  move  fp, sp
+
+  sw    a0, O_A0(fp)     # m
+  sw    a1, O_A1(fp)     # /n
 
 
-  sw a0, O_A0(fp)     //m
-  sw a1, O_A1(fp)     //n
+  //unsigned int a = m * n;
+  mul   $t0,$a0,$a1			 # m * n
 
+  jal mcd
 
-#IMPLEMENTACION
-#
-#
+  div $t0, $v0      # a / b
+  mflo $v0
+  
 
+  //return c;
 return:
-  li v0,r0 //devuelvo r0 No se si esta bien asi
-
 /*----Stack unwinding----*/
   lw fp, O_FP(sp)
   lw gp, O_GP(sp)
