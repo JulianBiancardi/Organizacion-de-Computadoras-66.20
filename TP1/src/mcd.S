@@ -1,17 +1,17 @@
 #include <sys/regdef.h>
 
-define SS 24 #stack size multiplo de 8
+#define SS 24 #stack size multiplo de 8
 #SRA
-define O_FP 20
-define O_GP 16
+#define O_FP 20
+#define O_GP 16
 
 #LTA
-define O_R0 0
-define O_R1 4
-define O_AUX 8
+#define O_R0 0
+#define O_R1 4
+#define O_AUX 8
 
-define O_A0 (SS)
-define O_A1 (O_A0 + 4)
+#define O_A0 (SS)
+#define O_A1 (O_A0 + 4)
 
 .text
 .align 2
@@ -39,15 +39,15 @@ mcd:
   lw t1, O_R1(fp) #obtengo r1 en t1
   lw t2, O_AUX(fp) #obtengo aux en t2
 while:
-  beqz $t1 return
-  move $t2, $t0   # aux = r0
-  move $t0, $t1   # r0  = r1
+  beqz t1 return
+  move t2, t0   # aux = r0
+  move t0, t1   # r0  = r1
   #.......         # r1  = aux % r1
   j while
 
 return:
   li v0,r0 #devuelvo r0 No se si esta bien asi
-
+  
 #----Stack unwinding----#
   lw fp, O_FP(sp)
   lw gp, O_GP(sp)
