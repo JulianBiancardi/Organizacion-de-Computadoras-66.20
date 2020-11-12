@@ -26,9 +26,3 @@ unsigned int mcd(unsigned int m, unsigned int n) {
 unsigned int mcm(unsigned int m, unsigned int n) {
   return ((m * n) / mcd(m, n));
 }
-
-int main() {
-  printf("%i\n", mcd(247, 221));
-  printf("%i\n", mcm(247, 221));
-  return 0;
-}

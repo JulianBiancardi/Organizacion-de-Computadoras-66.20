@@ -1,39 +1,33 @@
 #include <stdbool.h>
 #include <stddef.h>
-#include <unistd.h>
+#include <stdio.h>
 
 #include "args_parser.h"
 #include "constantsTP1.h"
-#include "file_writer.h"
+#include "euclides.h"
 
 #define ARGV_M 4
 #define ARGV_N 5
 
 int main(int argc, char** argv) {
-  char output_file[FILE_NAME_MAX_LEN] = "stdout";
-  bool divisor;
-  unsigned int m = argv[ARGV_M];
-  unsigned int n = argv[ARGV_N];
-  if (m < RANGE_MIN || m > RANGE_MAX) {
-    return ERROR;
-  }
-  if (n < RANGE_MIN || n > RANGE_MAX) {
-    return ERROR;
-  }
-  get_arguments(argc, argv, output_file, &divisor);
-
-  file_writer_t file_writer;
-  file_writer_init(&file_writer, output_file);
-
-  unsigned int result;
-  if (divisor == true) {
-    result = mcd(m, n);
-  } else {
-    result = mcm(m, n);
+  FILE* output;
+  char output_file[FILE_NAME_MAX_LEN];
+  unsigned int x;
+  unsigned int y;
+  bool mcm_bool;
+  bool mcd_bool;
+  if (get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool) !=
+      NO_ERROR) {
+    return 0;
   }
 
-  file_writer_write(&file_writer, result, );
-  file_writer_destroy(&file_writer);
-
+  if (mcd_bool) {
+    unsigned int result = mcd(x, y);
+    fprintf(output, "%d\n", result);
+  }
+  if (mcm_bool) {
+    unsigned int result = mcm(x, y);
+    fprintf(output, "%d\n", result);
+  }
   return NO_ERROR;
 }

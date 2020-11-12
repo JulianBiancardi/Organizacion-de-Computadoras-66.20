@@ -2,6 +2,7 @@
 #define ARGS_PARSER_H
 
 #include <stdbool.h>
+#include <stdio.h>
 
 /* Receives argc and argv and processes the command to make a decision.
  * If an output file is selected, it is put into output_file.
@@ -11,6 +12,7 @@
  * If an argument of the command is not recognized, the program will be
  * terminated during the call of this function with an error code -1.
  */
-void get_arguments(int argc, char** argv, char* output_file, bool* divisor);
+int get_arguments(int argc, char** argv, FILE** output, unsigned int* x,
+                  unsigned int* y, bool* mcm, bool* mcd);
 
 #endif
