@@ -6,7 +6,7 @@
 #include "constantsTP1.h"
 
 extern unsigned int mcd(unsigned int, unsigned int);
-extern unsigned int mcm(unsigned int, unsigned int);
+// extern unsigned int mcm(unsigned int, unsigned int);
 
 int main(int argc, char** argv) {
   FILE* output;
@@ -21,9 +21,10 @@ int main(int argc, char** argv) {
     unsigned int result = mcd(x, y);
     fprintf(output, "MCD: %u\n", result);
   }
+  /*
   if (mcm_bool) {
     unsigned int result = mcm(x, y);
     fprintf(output, "mcm: %u\n", result);
-  }
+  }*/
   return NO_ERROR;
 }
