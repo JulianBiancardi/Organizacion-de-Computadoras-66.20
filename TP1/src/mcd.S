@@ -23,12 +23,12 @@ mcd:
 
   subu sp,sp,SS
   sw fp, O_FP(sp)
-  sw gp, O_GP(gp)
+  sw gp, O_GP(sp)
   move fp, sp
 
 
-  sw a0, O_A0(fp)
-  sw a1, O_A1(fp)
+  sw a0, O_A0(fp)     //m
+  sw a1, O_A1(fp)     //n
 //-------LTA-------//
   lw t0, O_A0(fp)
   sw t0, O_R0(fp)
@@ -36,9 +36,9 @@ mcd:
   lw t0, O_A1(fp)
   sw t0, O_R1(fp)
 
-  lw t0, O_R0(fp) //obtengo r0 en t0
-  lw t1, O_R1(fp) //obtengo r1 en t1
-  lw t2, O_AUX(fp) //obtengo aux en t2
+  lw t0, O_R0(fp)     //obtengo r0 en t0
+  lw t1, O_R1(fp)     //obtengo r1 en t1
+  lw t2, O_AUX(fp)    //obtengo aux en t2
 while:
   beqz t1, return
   move t2, t0         // aux = r0
