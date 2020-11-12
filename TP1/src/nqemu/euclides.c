@@ -1,10 +1,11 @@
+#include "euclides.h"
 
 #include "stddef.h"
 #include "stdio.h"
 
 // Manera recursiva
 unsigned int mcd_rec(unsigned int m, unsigned int n) {
-  if (n = 0) {
+  if (n == 0) {
     return m;
   }
   return mcd_rec(n, m % n);
