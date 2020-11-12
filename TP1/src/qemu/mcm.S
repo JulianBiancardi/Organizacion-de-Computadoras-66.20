@@ -18,23 +18,23 @@
 mcm:
 
   subu  sp,sp,SS
-  sw		ra, O_RA($sp)		# guardo RA
+  sw		ra, O_RA(sp)		// guardo RA
   
   sw    fp, O_FP(sp)
   sw    gp, O_GP(sp)
   move  fp, sp
 
-  sw    a0, O_A0(fp)     # m
-  sw    a1, O_A1(fp)     # /n
+  sw    a0, O_A0(fp)     // m
+  sw    a1, O_A1(fp)     // n
 
 
   //unsigned int a = m * n;
-  mul   $s0,$a0,$a1			 # m * n
+  mul   s0,a0,a1			 // m * n
   
   jal mcd
 
-  div $s0, $v0      # a / b
-  mflo $v0
+  div s0, v0      // a / b
+  mflo v0
   
 
   //return c;
