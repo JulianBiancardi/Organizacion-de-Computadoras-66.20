@@ -23,11 +23,11 @@ int main(int argc, char** argv) {
 
   if (mcd_bool) {
     unsigned int result = mcd(x, y);
-    fprintf(output, "%d\n", result);
+    fprintf(output, "%u\n", result);
   }
   if (mcm_bool) {
     unsigned int result = mcm(x, y);
-    fprintf(output, "%d\n", result);
+    fprintf(output, "%u\n", result);
   }
   return NO_ERROR;
 }
