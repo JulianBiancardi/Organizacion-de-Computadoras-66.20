@@ -11,6 +11,8 @@
 
 #define END -2
 
+int static read_args(int argc, char** argv, FILE** output, unsigned int* x,
+                     unsigned int* y, bool* mcm, bool* mcd);
 void static print_version();
 void static print_help();
 int static get_output_file(FILE** output_file, char* optarg);
@@ -20,6 +22,19 @@ int static validate_nums(unsigned long int x, unsigned long int y);
 
 int get_arguments(int argc, char** argv, FILE** output, unsigned int* x,
                   unsigned int* y, bool* mcm, bool* mcd) {
+  if (read_args(argc, argv, output, x, y, mcm, mcd) == ERROR) {
+    return ERROR;
+  }
+
+  if (validate_mcm_mcd(mcm, mcd) == ERROR) {
+    return ERROR;
+  }
+
+  return get_nums(argc, argv, x, y);
+}
+
+int static read_args(int argc, char** argv, FILE** output, unsigned int* x,
+                     unsigned int* y, bool* mcm, bool* mcd) {
   static struct option arguments[] = {{"version", no_argument, NULL, 'V'},
                                       {"help", no_argument, NULL, 'h'},
                                       {"output", required_argument, NULL, 'o'},
@@ -59,11 +74,7 @@ int get_arguments(int argc, char** argv, FILE** output, unsigned int* x,
     }
   }
 
-  if (validate_mcm_mcd(mcm, mcd) == ERROR) {
-    return ERROR;
-  }
-
-  return get_nums(argc, argv, x, y);
+  return NO_ERROR;
 }
 
 void static print_version() { printf("Version: %d\n", VERSION); }
@@ -91,15 +102,17 @@ void static print_help() {
 int static get_output_file(FILE** output_file, char* optarg) {
   if (strncmp(optarg, "-", 1) == 0) {
     *output_file = stdout;
-    return NO_ERROR;
   } else {
     *output_file = fopen(optarg, "w");
-    return ERROR;
+    if (*output_file == NULL) {
+      return ERROR;
+    }
   }
+  return NO_ERROR;
 }
 
 int static validate_mcm_mcd(bool* mcm, bool* mcd) {
-  if (!(*mcm || *mcd)) {
+  if (!(*mcm || *mcd)) {  // If both are false
     fprintf(stderr,
             "Command Error: -m and -d are not allowed simultaneously.\n");
     print_help();
