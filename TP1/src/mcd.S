@@ -40,9 +40,10 @@ mcd:
   lw t2, O_AUX(fp) #obtengo aux en t2
 while:
   beqz t1 return
-  move t2, t0   # aux = r0
-  move t0, t1   # r0  = r1
-  #.......         # r1  = aux % r1
+  move t2, t0         # aux = r0
+  move t0, t1         # r0  = r1
+  div		$t2, $t1			# $t2 / $t1
+  mfhi	$t1					  # $t3 = $t2 mod $t1 
   j while
 
 return:
