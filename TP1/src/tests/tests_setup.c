@@ -20,7 +20,7 @@ void print_test(char* message, int (*func)(), int expected_value) {
   } else {
     sprintf(message_result, "%s: %sOK%s\n", message, CORRECT_GREEN, RESET_FONT);
   }
-  printf(message_result);
+  printf("%s", message_result);
 }
 
 void benchmark_test(char* message, unsigned int sample_size, double (*func)()) {

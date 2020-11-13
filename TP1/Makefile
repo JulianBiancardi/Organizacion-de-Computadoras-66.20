@@ -12,7 +12,7 @@ UNAME_S = $(shell uname -m)
 CC = gcc
 std = c99
 all_errors = yes
-# optimize = yes
+optimize = yes
 # debug = yes
 
 ifeq ($(UNAME_S),mips64)
