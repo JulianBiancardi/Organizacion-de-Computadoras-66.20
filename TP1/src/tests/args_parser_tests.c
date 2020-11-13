@@ -1,6 +1,7 @@
 #define _POSIX_C_SOURCE 200112L
 #include "args_parser_tests.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -137,7 +138,9 @@ int static five_args_command_test() {
 
 int static valid_huge_number_command_test() {
   int argc = 5;
-  char* argv[] = {"./common", "-o", "-", "4294967295", "5"};
+  char buf[15];
+  snprintf(buf, 14, "%u", UINT_MAX);
+  char* argv[] = {"./common", "-o", "-", "2147483647", "5"};
   FILE* output;
   unsigned int x, y;
   bool mcm_bool, mcd_bool;
@@ -152,7 +155,9 @@ int static valid_huge_number_command_test() {
 
 int static invalid_huge_number_command_test() {
   int argc = 5;
-  char* argv[] = {"./common", "-o", "-", "4294967296", "5"};
+  char buf[15];
+  snprintf(buf, 14, "%u", UINT_MAX + 1);
+  char* argv[] = {"./common", "-o", "-", buf, "5"};
   FILE* output;
   unsigned int x, y;
   bool mcm_bool, mcd_bool;
@@ -217,25 +222,25 @@ int static number_two_command_test() {
   unsigned int x, y;
   bool mcm_bool, mcd_bool;
 
-  int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  /*int old_stdout = dup(fileno(stdout));
+  freopen("/dev/null", "w", stdout);*/
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
-  fclose(stdout);
-  stdout = fdopen(old_stdout, "w");
+  /*fclose(stdout);
+  stdout = fdopen(old_stdout, "w");*/
   return result;
 }
 
 int static output_file_option_command_test() {
   int argc = 5;
-  char* argv[] = {"./common", "-o", "tests_file_output.txt", "40", "5"};
+  char* argv[] = {"./common", "-o", "file.txt", "40", "5"};
   FILE* output;
   unsigned int x, y;
   bool mcm_bool, mcd_bool;
 
-  int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  /*int old_stdout = dup(fileno(stdout));
+  freopen("/dev/null", "w", stdout);*/
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
-  fclose(stdout);
-  stdout = fdopen(old_stdout, "w");
+  /*fclose(stdout);
+  stdout = fdopen(old_stdout, "w");*/
   return result;
 }
