@@ -222,11 +222,11 @@ int static number_two_command_test() {
   unsigned int x, y;
   bool mcm_bool, mcd_bool;
 
-  /*int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);*/
+  int old_stdout = dup(fileno(stdout));
+  freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
-  /*fclose(stdout);
-  stdout = fdopen(old_stdout, "w");*/
+  fclose(stdout);
+  stdout = fdopen(old_stdout, "w");
   return result;
 }
 
@@ -237,10 +237,10 @@ int static output_file_option_command_test() {
   unsigned int x, y;
   bool mcm_bool, mcd_bool;
 
-  /*int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);*/
+  int old_stdout = dup(fileno(stdout));
+  freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
-  /*fclose(stdout);
-  stdout = fdopen(old_stdout, "w");*/
+  fclose(stdout);
+  stdout = fdopen(old_stdout, "w");
   return result;
 }

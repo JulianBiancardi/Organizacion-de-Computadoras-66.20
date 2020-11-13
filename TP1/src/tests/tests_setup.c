@@ -23,6 +23,11 @@ void print_test(char* message, int (*func)(), int expected_value) {
   printf(message_result);
 }
 
+void benchmark_test(char* message, unsigned int sample_size, double (*func)()) {
+  printf("%s%u%s %s: %s%f s%s\n", BOLD_FONT, sample_size, RESET_FONT, message,
+         BOLD_FONT, func(), RESET_FONT);
+}
+
 void begin_tests(char* module_tested) {
   size_t module_len = strlen(module_tested);
   for (int i = 0; i < DIV_LEN; i++) {
