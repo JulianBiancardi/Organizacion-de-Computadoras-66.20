@@ -28,7 +28,7 @@ void args_parser_tests() {
   begin_tests("ArgsParser");
 
   int old_stderr = dup(fileno(stderr));
-  freopen("/dev/null", "w", stderr);
+  FILE* file = freopen("/dev/null", "w", stderr);
 
   print_test("Commands with a single argument returns an error",
              single_arg_command_test, ERROR);
@@ -69,7 +69,7 @@ int static single_arg_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -84,7 +84,7 @@ int static two_args_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -99,7 +99,7 @@ int static three_args_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -114,7 +114,7 @@ int static four_args_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -129,7 +129,7 @@ int static five_args_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -146,7 +146,7 @@ int static valid_huge_number_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -163,7 +163,7 @@ int static invalid_huge_number_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -178,7 +178,7 @@ int static negative_number_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -193,7 +193,7 @@ int static number_zero_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -208,7 +208,7 @@ int static number_one_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -223,7 +223,7 @@ int static number_two_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
@@ -238,7 +238,7 @@ int static output_file_option_command_test() {
   bool mcm_bool, mcd_bool;
 
   int old_stdout = dup(fileno(stdout));
-  freopen("/dev/null", "w", stdout);
+  FILE* file = freopen("/dev/null", "w", stdout);
   int result = get_arguments(argc, argv, &output, &x, &y, &mcm_bool, &mcd_bool);
   fclose(stdout);
   stdout = fdopen(old_stdout, "w");
