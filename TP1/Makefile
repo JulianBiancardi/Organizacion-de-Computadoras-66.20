@@ -4,7 +4,7 @@ NQEMU_SOURCES = $(wildcard src/nqemu/*.c)
 
 SOURCES = $(MAIN_SOURCES)
 
-#TESTS_SOURCES = $(filter-out src/main/main.cpp, $(wildcard src/*/*.cpp))
+TESTS_SOURCES = $(wildcard src/tests/*.c) $(filter-out src/main/main.c, $(wildcard src/main/*.c))
 
 UNAME_S = $(shell uname -m)
 
@@ -17,8 +17,10 @@ all_errors = yes
 
 ifeq ($(UNAME_S),mips64)
 	SOURCES += $(QEMU_SOURCES)
+	TESTS_SOURCES += $(QEMU_SOURCES)
 	CC_FLAGS += "-mips32 -mlong32"
 else
+	TESTS_SOURCES += $(NQEMU_SOURCES)
 	SOURCES += $(NQEMU_SOURCES)
 endif
 
@@ -59,7 +61,7 @@ endif
 
 ## END OF LINKER ## 
 
-.PHONY: all
+.PHONY: all tests
 all: tp0
 
 tp0: $(SOURCES)

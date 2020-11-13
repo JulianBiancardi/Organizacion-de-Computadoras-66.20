@@ -38,7 +38,7 @@ int static read_args(int argc, char** argv, FILE** output, unsigned int* x,
   static struct option arguments[] = {{"version", no_argument, NULL, 'V'},
                                       {"help", no_argument, NULL, 'h'},
                                       {"output", required_argument, NULL, 'o'},
-                                      {"decode", no_argument, NULL, 'd'},
+                                      {"divide", no_argument, NULL, 'd'},
                                       {"multiple", no_argument, NULL, 'm'},
                                       {NULL, 0, NULL, 0}};
   // True unless the options say so
