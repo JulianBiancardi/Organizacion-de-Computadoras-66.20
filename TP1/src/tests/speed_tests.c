@@ -12,7 +12,7 @@ double static mcd_time_test();
 extern unsigned int mcm(unsigned int, unsigned int);
 extern unsigned int mcd(unsigned int, unsigned int);
 
-#define SAMPLE_SIZE 1073741824  // 2 ^ 30 - 1
+#define SAMPLE_SIZE 1073741823  // 2 ^ 30 - 1
 
 void speed_tests() {
   begin_tests("SPEED TESTS");
@@ -47,7 +47,7 @@ double static mcd_time_test() {
   }
 
   clock_t start = clock();
-  for (int i = 0; i < SAMPLE_SIZE; i++) {  // 2^25 - 1
+  for (int i = 0; i < SAMPLE_SIZE; i++) {
     unsigned int index = rand();
     index %= 1023;
     mcd(numbers[index], numbers[index]);
