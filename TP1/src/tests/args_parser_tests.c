@@ -25,7 +25,7 @@ int static number_two_command_test();
 int static output_file_option_command_test();
 
 void args_parser_tests() {
-  begin_tests("ArgsParser");
+  begin_tests("ARGS PARSER TESTS");
 
   int old_stderr = dup(fileno(stderr));
   FILE* file = freopen("/dev/null", "w", stderr);

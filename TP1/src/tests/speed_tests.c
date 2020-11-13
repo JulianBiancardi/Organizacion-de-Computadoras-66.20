@@ -15,7 +15,7 @@ extern unsigned int mcd(unsigned int, unsigned int);
 #define SAMPLE_SIZE 1073741824  // 2 ^ 30 - 1
 
 void speed_tests() {
-  begin_tests("SPEED_TESTS");
+  begin_tests("SPEED TESTS");
 
   benchmark_test("Ejecuciones de MCM", SAMPLE_SIZE, mcm_time_test);
   benchmark_test("Ejecuciones de MCD", SAMPLE_SIZE, mcd_time_test);
