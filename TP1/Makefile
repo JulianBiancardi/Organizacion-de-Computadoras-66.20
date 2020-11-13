@@ -11,7 +11,7 @@ UNAME_S = $(shell uname -m)
 ## COMPILER FLAGS ##
 CC = gcc
 std = c99
-all_errors = yes
+# all_errors = yes
 optimize = yes
 # debug = yes
 
