@@ -1,22 +1,27 @@
 #include "cache.h"
 
-/* La memoria a simular es una caché [1] asociativa por conjuntos, en que
-se puedan pasar por parámetro el número de vı́as, la capacidad y el tamaño
-de bloque. La polı́tica de reemplazo será LRU y la polı́tica de escrituraserá
-WB/WA. Se asume que el espacio de direcciones es de 16 bits, y hay entonces una
-memoria principal a simular con un tamaño de 64KB. Estas memorias pueden ser
-implementadas como variables globales. Cada bloque de la memoria caché deberá
-contar con su metadata, incluyendo el bit V , el bit D, el tag, y un campo que
-permita implementar la polı́tica de LRU.*/
+#include <stdlib.h>
+
+#define KB 1024
 
 void cache_init(cache_t* self, int ways, int cachesize, int blocksize) {
   if (self == NULL) {
     // TODO RETURN AN ERROR
     return;
   }
-
-  self->missses = 0;
   self->hits = 0;
+  self->missses = 0;
+
+  // Number of sets in the cache
+  int number_sets = (cachesize * KB) / (blocksize * ways);
+  self->sets = (set_t*)malloc(sizeof(set_t) * number_sets);
+
+  for (size_t i = 0; i < number_sets; i++) {
+    self->sets[i].blocks = (block_t*)malloc(sizeof(block_t) * ways);
+    for (size_t j = 0; j < ways; j++) {
+      self->sets[i].blocks[j].data = malloc(sizeof(unsigned char) * blocksize);
+    }
+  }
 }
 
 unsigned int cache_find_set(cache_t* self, int address);

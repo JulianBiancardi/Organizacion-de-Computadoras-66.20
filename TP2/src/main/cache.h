@@ -18,21 +18,23 @@ typedef struct block {
   bool valid;
   bool dirty;
   unsigned char tag;
-  // unsigned char data[SIZE_BLOQUE];
+  unsigned char* data;
 } block_t;
 
-typedef struct conjunto {
-  // struct bloque vias[BLOQUES_POR_CONJUNTO];
-};
+typedef struct set {
+  block_t* blocks;
+} set_t;
 
 typedef struct cache {
   unsigned int hits;
   unsigned int missses;
-  unsigned int ultimoBloque;
-  // struct conjunto conjuntos[CANT_CONJUNTOS];
+  unsigned int last_status;
+  unsigned int last_block;
+  set_t* sets;
 } cache_t;
 
-void cache_init(cache_t* self, int ways, int cachesize, int blocksize);
+void cache_init(cache_t* self, int ways, int cachesize,
+                int blocksize);  // TODO REMOVE THIS PARAMETERS
 
 unsigned int cache_find_set(cache_t* self, int address);
 
