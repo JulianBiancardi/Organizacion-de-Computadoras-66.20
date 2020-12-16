@@ -19,6 +19,7 @@ struct main_memory {
 } main_memory;
 
 typedef struct block {
+  unsigned int date;
   bool valid;
   bool dirty;
   unsigned char tag;
