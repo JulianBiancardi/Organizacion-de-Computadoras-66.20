@@ -8,10 +8,6 @@
 
 #define KB 1024
 
-<<<<<<< HEAD
-//-------------------------------------------------------------
-=======
->>>>>>> bbaa762071ae25a0ae451d43df6e04bdf46214fe
 /* Private functions*/
 
 void memory_init(memory_t* memory) {

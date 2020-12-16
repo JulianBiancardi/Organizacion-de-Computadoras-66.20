@@ -16,8 +16,7 @@ int static read_args(int argc, char** argv, file_reader_t* output,
                      unsigned int* cs, unsigned int* w, unsigned int* bs);
 void static print_version();
 void static print_help();
-int static get_output_file(FILE** output_file, char* optarg);
-int static validate_nums(unsigned long int x, unsigned long int y);
+// int static get_output_file(FILE** output_file, char* optarg);
 
 int get_arguments(int argc, char** argv, file_reader_t* file_reader,
                   unsigned int* cs, unsigned int* w, unsigned int* bs) {
@@ -91,6 +90,7 @@ void static print_help() {
   printf("\ttp2 -w 4 -cs 8 -bs 16 prueba1.mem\n");
 }
 
+/*
 int static get_output_file(FILE** output_file, char* optarg) {
   if (strncmp(optarg, "-", 1) == 0) {
     *output_file = stdout;
@@ -101,4 +101,4 @@ int static get_output_file(FILE** output_file, char* optarg) {
     }
   }
   return NO_ERROR;
-}
+}*/
