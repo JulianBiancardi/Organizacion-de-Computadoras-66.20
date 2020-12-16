@@ -1,8 +1,7 @@
 #ifndef ARGS_PARSER_H
 #define ARGS_PARSER_H
 
-#include <stdbool.h>
-#include <stdio.h>
+#include "file_reader.h"
 
 /* Receives argc and argv and processes the command to make a decision.
  * If an output file is selected, it is put into output_file.
@@ -13,7 +12,7 @@
  * If an argument is invalid or not recognized, -1 is returned.
  * If the arguments are valid and the program can continue, 0 is returned.
  */
-int get_arguments(int argc, char** argv, FILE** output, unsigned int* x,
-                  unsigned int* y, bool* mcm, bool* mcd);
+int get_arguments(int argc, char** argv, file_reader_t* file_reader,
+                  unsigned int* cs, unsigned int* w, unsigned int* bs);
 
 #endif
