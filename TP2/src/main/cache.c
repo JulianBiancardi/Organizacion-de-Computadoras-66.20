@@ -34,6 +34,35 @@ static unsigned int _get_offset(address) {
   return offset;
 }
 
+static unsigned int select_oldest(cache_t* self, unsigned int setnum) {
+  unsigned int way = 0;
+  unsigned int max = self->sets[setnum].blocks[way].date;
+  for (size_t j = 1; j < ways; j++) {
+    if (self->sets[setnum].blocks[j].date > max) {
+      max = self->sets[setnum].blocks[j].date;
+      way = j;
+    }
+  }
+  return way;
+}
+
+static void _read_tocache(cache_t* self, unsigned int blocknum,
+                          unsigned int way, unsigned int set) {
+  block_t current_block = self->sets[set].blocks[way];
+  if (current_block.valid && current_block.dirty) {
+    write_tomem(way, set);  // Escribo el bloque en memoria.
+  }
+
+  for (size_t i = 0; i < blocksize; i++) {
+    current_block.data[i] = main_memory.data[blocknum * blocksize + i];
+  }
+
+  // current_block.numero = ++cache.ultimoBloque;
+  current_block.dirty = false;
+  current_block.valid = true;
+  current_block.tag = get_tag(blocknum * blocksize);
+}
+
 /* Public functions */
 void cache_init(cache_t* self) {
   if (self == NULL) {
@@ -104,11 +133,10 @@ unsigned char cache_read_byte(cache_t* self, int address) {
   }
   // El dato no se encuentra en cache => cargo el bloque y devuelvo el dato.
   (self->missses)++;
-  /* TODO
-  unsigned int way = select_oldest(conjunto);
-  read_tocache(get_memblock(address), way, conjunto);
-  return cache.conjuntos[conjunto].vias[way].data[offset];*/
-  return;
+
+  unsigned int way = select_oldest(self, set);
+  read_tocache(get_memblock(address), way, set);
+  return self->sets[set].blocks[way].data[offset];
 }
 
 void cache_write_byte(cache_t* self, int address, unsigned char value) {
