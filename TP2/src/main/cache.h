@@ -14,7 +14,6 @@ contar con su metadata, incluyendo el bit V , el bit D, el tag, y un campo que
 permita implementar la polı́tica de LRU.*/
 
 typedef struct block {
-  unsigned int id;
   bool valid;
   bool dirty;
   unsigned char tag;
@@ -26,11 +25,11 @@ typedef struct set {
 } set_t;
 
 typedef struct cache {
+  set_t* sets;
   unsigned int hits;
   unsigned int missses;
   unsigned int last_status;
   unsigned int last_block;
-  set_t* sets;
 } cache_t;
 
 void cache_init(cache_t* self);  // TODO REMOVE THIS PARAMETERS
@@ -45,9 +44,9 @@ void cache_read_block(cache_t* self, int blocknum);
 
 void cache_write_block(cache_t* self, int way, int setnum);
 
-char cache_read_byte(cache_t* self, int address);
+unsigned char cache_read_byte(cache_t* self, int address);
 
-void cache_write_byte(cache_t* self, int address, char value);
+void cache_write_byte(cache_t* self, int address, unsigned char value);
 
 int cache_get_miss_rate(cache_t* self);
 

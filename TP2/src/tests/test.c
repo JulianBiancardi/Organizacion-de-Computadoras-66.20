@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "cache.h"
+#include "../main/cache.h"
 
 int main(int args, char** argv) {
   cache_t cache;
