@@ -4,8 +4,32 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+/* La memoria a simular es una caché [1] asociativa por conjuntos, en que
+se puedan pasar por parámetro el número de vı́as, la capacidad y el tamaño
+de bloque. La polı́tica de reemplazo será LRU y la polı́tica de escrituraserá
+WB/WA. Se asume que el espacio de direcciones es de 16 bits, y hay entonces una
+memoria principal a simular con un tamaño de 64KB. Estas memorias pueden ser
+implementadas como variables globales. Cada bloque de la memoria caché deberá
+contar con su metadata, incluyendo el bit V , el bit D, el tag, y un campo que
+permita implementar la polı́tica de LRU.*/
+
+typedef struct block {
+  unsigned int id;
+  bool valid;
+  bool dirty;
+  unsigned char tag;
+  // unsigned char data[SIZE_BLOQUE];
+} block_t;
+
+typedef struct conjunto {
+  // struct bloque vias[BLOQUES_POR_CONJUNTO];
+};
+
 typedef struct cache {
-  int miss_rate;
+  unsigned int hits;
+  unsigned int missses;
+  unsigned int ultimoBloque;
+  // struct conjunto conjuntos[CANT_CONJUNTOS];
 } cache_t;
 
 void cache_init(cache_t* self, int ways, int cachesize, int blocksize);

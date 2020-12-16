@@ -15,7 +15,8 @@ void cache_init(cache_t* self, int ways, int cachesize, int blocksize) {
     return;
   }
 
-  self->miss_rate = 0;
+  self->missses = 0;
+  self->hits = 0;
 }
 
 unsigned int cache_find_set(cache_t* self, int address);
@@ -32,6 +33,11 @@ char cache_read_byte(cache_t* self, int address);
 
 void cache_write_byte(cache_t* self, int address, char value);
 
-int cache_get_miss_rate(cache_t* self) { return self->miss_rate; }
+int cache_get_miss_rate(cache_t* self) {
+  if ((self->missses + self->missses) == 0) {
+    return 0;
+  }
+  return (self->missses / (self->missses + self->hits));
+}
 
 void cache_uninit(cache_t* self);
