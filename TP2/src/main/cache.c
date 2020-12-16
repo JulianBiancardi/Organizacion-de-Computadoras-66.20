@@ -1,10 +1,16 @@
 #include "cache.h"
 
+#include <math.h>
 #include <stdlib.h>
 
 #define KB 1024
 
-void cache_init(cache_t* self, int ways, int cachesize, int blocksize) {
+// TODO MOVE THIS
+static int ways = 4;
+static int cachesize = 4;
+static int blocksize = 256;
+
+void cache_init(cache_t* self) {
   if (self == NULL) {
     // TODO RETURN AN ERROR
     return;
@@ -16,19 +22,39 @@ void cache_init(cache_t* self, int ways, int cachesize, int blocksize) {
   int number_sets = (cachesize * KB) / (blocksize * ways);
   self->sets = (set_t*)malloc(sizeof(set_t) * number_sets);
 
+  // TODO VERIFY THE NULL POINTER
   for (size_t i = 0; i < number_sets; i++) {
     self->sets[i].blocks = (block_t*)malloc(sizeof(block_t) * ways);
     for (size_t j = 0; j < ways; j++) {
-      self->sets[i].blocks[j].data = malloc(sizeof(unsigned char) * blocksize);
+      self->sets[i].blocks[j].data = calloc(blocksize, sizeof(unsigned char));
+      self->sets[i].blocks[j].valid = false;
+      self->sets[i].blocks[j].dirty = false;
     }
   }
 }
 
-unsigned int cache_find_set(cache_t* self, int address);
+unsigned int cache_find_set(cache_t* self, int address) {
+  /* ADDRES = LABEL + SET + OFFSET */
+  /* 000000  00  00000000  */
+  /*
+  Se asume que el espacio de direcciones es de 16 bits
+  */
+  double number_sets = (cachesize * KB) / (blocksize * ways);
+  int bit_offset = log2(256);
+  int bit_set = log2(4);
+  int bit_label = 16 - (bit_set + bit_offset);
+
+  unsigned int set =
+      ((address << bit_label) >> (bit_offset + bit_label)) & bit_set;
+
+  return set;
+}
 
 unsigned int cache_find_lru(cache_t* self, int setnum);
 
-unsigned int cache_is_dirty(cache_t* self, int way, int setnum);
+unsigned int cache_is_dirty(cache_t* self, int way, int setnum) {
+  return self->sets[setnum].blocks[way].dirty;
+}
 
 void cache_read_block(cache_t* self, int blocknum);
 

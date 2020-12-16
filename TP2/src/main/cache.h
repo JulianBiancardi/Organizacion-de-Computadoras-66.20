@@ -33,8 +33,7 @@ typedef struct cache {
   set_t* sets;
 } cache_t;
 
-void cache_init(cache_t* self, int ways, int cachesize,
-                int blocksize);  // TODO REMOVE THIS PARAMETERS
+void cache_init(cache_t* self);  // TODO REMOVE THIS PARAMETERS
 
 unsigned int cache_find_set(cache_t* self, int address);
 
