@@ -10,6 +10,31 @@ static unsigned int ways = 4;
 static unsigned int cachesize = 4;
 static unsigned int blocksize = 256;
 
+/* Private functions*/
+
+void main_memory_init() { memset(main_memory.data, 0, sizeof(main_memory)); }
+
+static unsigned int _get_tag(address) {
+  int number_sets = (cachesize * KB) / (blocksize * ways);
+  int bit_offset = log2(256);
+  int bit_set = log2(4);
+  int bit_tag = 16 - (bit_set + bit_offset);  // TODO 16 IS CONSTANT
+
+  unsigned int tag = (address >> (bit_offset + bit_set)) & bit_tag;
+
+  return tag;
+}
+
+static unsigned int _get_offset(address) {
+  int number_sets = (cachesize * KB) / (blocksize * ways);
+  int bit_offset = log2(256);
+
+  unsigned int offset = address & bit_offset;
+
+  return offset;
+}
+
+/* Public functions */
 void cache_init(cache_t* self) {
   if (self == NULL) {
     // TODO RETURN AN ERROR
@@ -31,21 +56,20 @@ void cache_init(cache_t* self) {
       self->sets[i].blocks[j].dirty = false;
     }
   }
+
+  main_memory_init();
 }
 
 unsigned int cache_find_set(cache_t* self, int address) {
-  /* ADDRES = LABEL + SET + OFFSET */
-  /* 000000  00  00000000  */
-  /*
-  Se asume que el espacio de direcciones es de 16 bits
-  */
+  /* ADDRES = TAG + SET + OFFSET */
+  /*Se asume que el espacio de direcciones es de 16 bits */
+
   int number_sets = (cachesize * KB) / (blocksize * ways);
   int bit_offset = log2(256);
   int bit_set = log2(4);
-  int bit_label = 16 - (bit_set + bit_offset);  // TODO 16 IS CONSTANT
+  int bit_tag = 16 - (bit_set + bit_offset);  // TODO 16 IS CONSTANT
 
-  unsigned int set =
-      ((address << bit_label) >> (bit_offset + bit_label)) & bit_set;
+  unsigned int set = ((address << bit_tag) >> (bit_offset + bit_tag)) & bit_set;
 
   return set;
 }
@@ -67,9 +91,47 @@ void cache_write_block(cache_t* self, int way, int setnum) {
   unsigned char* data = self->sets[setnum].blocks[way].data;
 }
 
-unsigned char cache_read_byte(cache_t* self, int address);
+unsigned char cache_read_byte(cache_t* self, int address) {
+  unsigned int set = cache_find_set(self, address);
+  unsigned int tag = _get_tag(address);
+  unsigned int offset = _get_offset(address);
+  for (size_t i = 0; i < ways; i++) {
+    block_t current_block = self->sets[set].blocks[i];
+    if (current_block.valid && current_block.tag == tag) {
+      (self->hits)++;
+      return current_block.data[offset];
+    }
+  }
+  // El dato no se encuentra en cache => cargo el bloque y devuelvo el dato.
+  (self->missses)++;
+  /* TODO
+  unsigned int way = select_oldest(conjunto);
+  read_tocache(get_memblock(address), way, conjunto);
+  return cache.conjuntos[conjunto].vias[way].data[offset];*/
+  return;
+}
 
-void cache_write_byte(cache_t* self, int address, unsigned char value);
+void cache_write_byte(cache_t* self, int address, unsigned char value) {
+  unsigned int set = cache_find_set(self, address);
+  unsigned int tag = _get_tag(address);
+  unsigned int offset = _get_offset(address);
+  for (size_t i = 0; i < ways; i++) {
+    block_t current_block = self->sets[set].blocks[i];
+    if (current_block.valid && current_block.tag == tag) {
+      (self->hits)++;
+      current_block.data[offset] = value;
+      return;
+    }
+  }
+  // El dato no se encuentra en cache => cargo el bloque y lo escribo.
+  (self->missses)++;
+  /*TODO
+  unsigned int way = select_oldest(conjunto);
+  read_tocache(get_memblock(address), way, conjunto);
+  cache.conjuntos[conjunto].vias[way].dirty = true;
+  cache.conjuntos[conjunto].vias[way].data[offset] = value;*/
+  return;
+}
 
 int cache_get_miss_rate(cache_t* self) {
   if ((self->missses + self->missses) == 0) {
