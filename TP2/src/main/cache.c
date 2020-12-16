@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define KB 1024
 
@@ -12,9 +13,12 @@ static unsigned int blocksize = 256;
 
 /* Private functions*/
 
-void main_memory_init() { memset(main_memory.data, 0, sizeof(main_memory)); }
+void memory_init(memory_t* memory) {
+  memory->data = malloc(MAIN_MEMORY_SIZE);
+  memset(memory->data, 0, MAIN_MEMORY_SIZE);
+}
 
-static unsigned int _get_tag(address) {
+static unsigned int _get_tag(int address) {
   int number_sets = (cachesize * KB) / (blocksize * ways);
   int bit_offset = log2(256);
   int bit_set = log2(4);
@@ -25,7 +29,7 @@ static unsigned int _get_tag(address) {
   return tag;
 }
 
-static unsigned int _get_offset(address) {
+static unsigned int _get_offset(int address) {
   int number_sets = (cachesize * KB) / (blocksize * ways);
   int bit_offset = log2(256);
 
@@ -34,18 +38,7 @@ static unsigned int _get_offset(address) {
   return offset;
 }
 
-static unsigned int select_oldest(cache_t* self, unsigned int setnum) {
-  unsigned int way = 0;
-  unsigned int max = self->sets[setnum].blocks[way].date;
-  for (size_t j = 1; j < ways; j++) {
-    if (self->sets[setnum].blocks[j].date > max) {
-      max = self->sets[setnum].blocks[j].date;
-      way = j;
-    }
-  }
-  return way;
-}
-
+/*
 static void _read_tocache(cache_t* self, unsigned int blocknum,
                           unsigned int way, unsigned int set) {
   block_t current_block = self->sets[set].blocks[way];
@@ -60,8 +53,8 @@ static void _read_tocache(cache_t* self, unsigned int blocknum,
   // current_block.numero = ++cache.ultimoBloque;
   current_block.dirty = false;
   current_block.valid = true;
-  current_block.tag = get_tag(blocknum * blocksize);
-}
+  current_block.tag = _get_tag(blocknum * blocksize);
+}*/
 
 /* Public functions */
 void cache_init(cache_t* self) {
@@ -86,7 +79,8 @@ void cache_init(cache_t* self) {
     }
   }
 
-  main_memory_init();
+  self->memory = malloc(sizeof(memory_t*));
+  memory_init(self->memory);
 }
 
 unsigned int cache_find_set(cache_t* self, int address) {
@@ -94,8 +88,8 @@ unsigned int cache_find_set(cache_t* self, int address) {
   /*Se asume que el espacio de direcciones es de 16 bits */
 
   int number_sets = (cachesize * KB) / (blocksize * ways);
-  int bit_offset = log2(256);
-  int bit_set = log2(4);
+  int bit_offset = log2(blocksize);
+  int bit_set = log2(number_sets);
   int bit_tag = 16 - (bit_set + bit_offset);  // TODO 16 IS CONSTANT
 
   unsigned int set = ((address << bit_tag) >> (bit_offset + bit_tag)) & bit_set;
@@ -103,13 +97,23 @@ unsigned int cache_find_set(cache_t* self, int address) {
   return set;
 }
 
-unsigned int cache_find_lru(cache_t* self, int setnum);
+unsigned int cache_find_lru(cache_t* self, int setnum) {
+  unsigned int way = 0;
+  unsigned int max = self->sets[setnum].blocks[way].date;
+  for (size_t j = 1; j < ways; j++) {
+    if (self->sets[setnum].blocks[j].date > max) {
+      max = self->sets[setnum].blocks[j].date;
+      way = j;
+    }
+  }
+  return way;
+}
 
 unsigned int cache_is_dirty(cache_t* self, int way, int setnum) {
   return self->sets[setnum].blocks[way].dirty;
 }
 
-void cache_read_block(cache_t* self, int blocknum);
+void cache_read_block(cache_t* self, int blocknum) {}
 
 void cache_write_block(cache_t* self, int way, int setnum) {
   int number_sets = (cachesize * KB) / (blocksize * ways);
@@ -120,7 +124,7 @@ void cache_write_block(cache_t* self, int way, int setnum) {
   unsigned char* data = self->sets[setnum].blocks[way].data;
 }
 
-unsigned char cache_read_byte(cache_t* self, int address) {
+/*unsigned char cache_read_byte(cache_t* self, int address) {
   unsigned int set = cache_find_set(self, address);
   unsigned int tag = _get_tag(address);
   unsigned int offset = _get_offset(address);
@@ -135,9 +139,9 @@ unsigned char cache_read_byte(cache_t* self, int address) {
   (self->missses)++;
 
   unsigned int way = select_oldest(self, set);
-  read_tocache(get_memblock(address), way, set);
+  _read_tocache(get_memblock(address), way, set);
   return self->sets[set].blocks[way].data[offset];
-}
+}*/
 
 void cache_write_byte(cache_t* self, int address, unsigned char value) {
   unsigned int set = cache_find_set(self, address);
@@ -168,4 +172,4 @@ int cache_get_miss_rate(cache_t* self) {
   return (self->missses / (self->missses + self->hits));
 }
 
-void cache_uninit(cache_t* self);
+void cache_uninit(cache_t* self) {}

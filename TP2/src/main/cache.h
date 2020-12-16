@@ -14,9 +14,9 @@ implementadas como variables globales. Cada bloque de la memoria caché deberá
 contar con su metadata, incluyendo el bit V , el bit D, el tag, y un campo que
 permita implementar la polı́tica de LRU.*/
 
-struct main_memory {
-  unsigned char data[MAIN_MEMORY_SIZE];
-} main_memory;
+typedef struct memory {
+  unsigned char* data;
+} memory_t;
 
 typedef struct block {
   unsigned int date;
@@ -31,6 +31,7 @@ typedef struct set {
 } set_t;
 
 typedef struct cache {
+  memory_t* memory;
   set_t* sets;
   unsigned int hits;
   unsigned int missses;
