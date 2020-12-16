@@ -1,18 +1,16 @@
 #include "args_parser.h"
-
+/*
 #include <errno.h>
 #include <getopt.h>
-#include <limits.h>
+#include <limits.h>*/
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+/*#include <stdlib.h>
+#include <string.h>*/
 
 #include "constantsTP2.h"
 
-#define END -2
-
-int static read_args(int argc, char** argv, FILE** output, unsigned int* x,
-                     unsigned int* y, bool* mcm, bool* mcd);
+int static read_args(int argc, char** argv, FILE** output, unsigned int* cs,
+                     unsigned int* w, unsigned int* bs);
 void static print_version();
 void static print_help();
 int static get_output_file(FILE** output_file, char* optarg);
@@ -20,9 +18,9 @@ int static validate_mcm_mcd(bool* mcm, bool* mcd);
 int static get_nums(int argc, char** argv, unsigned int* x, unsigned int* y);
 int static validate_nums(unsigned long int x, unsigned long int y);
 
-int get_arguments(int argc, char** argv, FILE** output, unsigned int* x,
-                  unsigned int* y, bool* mcm, bool* mcd) {
-  if (read_args(argc, argv, output, x, y, mcm, mcd) == ERROR) {
+int get_arguments(int argc, char** argv, file_reader_t* file_reader,
+                  unsigned int* cs, unsigned int* w, unsigned int* bs) {
+  if (read_args(argc, argv, file_reader, cs, w, bs) == ERROR) {
     return ERROR;
   }
 
@@ -33,18 +31,14 @@ int get_arguments(int argc, char** argv, FILE** output, unsigned int* x,
   return get_nums(argc, argv, x, y);
 }
 
-int static read_args(int argc, char** argv, FILE** output, unsigned int* x,
-                     unsigned int* y, bool* mcm, bool* mcd) {
+int static read_args(int argc, char** argv, file_reader_t* file_reader,
+                     unsigned int* cs, unsigned int* w, unsigned int* bs) {
   static struct option arguments[] = {{"version", no_argument, NULL, 'V'},
                                       {"help", no_argument, NULL, 'h'},
                                       {"output", required_argument, NULL, 'o'},
                                       {"divide", no_argument, NULL, 'd'},
                                       {"multiple", no_argument, NULL, 'm'},
                                       {NULL, 0, NULL, 0}};
-  // True unless the options say so
-  *mcm = true;
-  *mcd = true;
-
   while (true) {
     int opt = getopt_long(argc, argv, "hVo:dm", arguments, NULL);
     if (opt == -1) {
@@ -82,21 +76,22 @@ void static print_version() { printf("Version: %d\n", VERSION); }
 void static print_help() {
   printf("Usage:\n\n");
 
-  printf("\tcommon -h\n");
-  printf("\tcommon -V\n");
-  printf("\tcommon [options] M N\n");
+  printf("\ttp2 -h\n");
+  printf("\ttp2 -V\n");
+  printf("\ttp2 options archivo\n");
 
   printf("\nOptions:\n\n");
 
   printf("\t-h, --help\t\tPrint usage information.\n");
   printf("\t-V, --version\t\tPrints version information.\n");
   printf("\t-o, --output\t\tPath to output file.\n");
-  printf("\t-d --divisor\t\tJust the divisor.\n");
-  printf("\t-m --multiple\t\tJust the multiple.\n");
+  printf("\t-w, --ways\t\tAmount of ways.\n");
+  printf("\t-cs --cachesize\t\tSize of the cache in kilobytes.\n");
+  printf("\t-bs --blocksize\t\tSize of a block in bytes.\n");
 
   printf("\nExamples:\n\n");
 
-  printf("\tcommon -o - 256 192\n");
+  printf("\ttp2 -w 4 -cs 8 -bs 16 prueba1.mem\n");
 }
 
 int static get_output_file(FILE** output_file, char* optarg) {

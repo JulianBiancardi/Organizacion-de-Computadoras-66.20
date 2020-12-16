@@ -8,12 +8,10 @@
 
 #define KB 1024
 
-// TODO MOVE THIS
-unsigned int ways = 4;
-unsigned int cachesize = 4;
-unsigned int blocksize = 256;
-
+<<<<<<< HEAD
 //-------------------------------------------------------------
+=======
+>>>>>>> bbaa762071ae25a0ae451d43df6e04bdf46214fe
 /* Private functions*/
 
 void memory_init(memory_t* memory) {
