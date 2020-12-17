@@ -21,9 +21,6 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  cache_init();
-  memory_init();
-
   file_reader_process(&file_reader, (callback_t)process_and_output,
                       &file_writer);
 

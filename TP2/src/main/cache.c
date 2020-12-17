@@ -14,6 +14,7 @@
 unsigned int ways = 0;
 unsigned int cachesize = 0;
 unsigned int blocksize = 0;
+bool cache_initialized = false;
 cache_t cache;
 
 //-------------------------------------------------------------
@@ -69,6 +70,7 @@ int cache_init() {
     }
   }
 
+  cache_initialized = true;
   return NO_ERROR;
 }
 
@@ -204,5 +206,7 @@ void cache_uninit() {
     free(cache.sets[setnum].blocks);
   }
   free(cache.sets);
+
+  cache_initialized = false;
 }
 //-------------------------------------------------------------
