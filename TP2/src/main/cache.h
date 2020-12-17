@@ -18,11 +18,13 @@ typedef struct set {
 
 typedef struct cache {
   set_t* sets;
-  unsigned int setsnum;
   unsigned int hits;
   unsigned int misses;
   bool last_satuts;
-  unsigned int last_block;  // TODO consider this
+  unsigned int setsnum;
+  unsigned int bits_tag;
+  unsigned int bits_set;
+  unsigned int bits_offset;
 } cache_t;
 
 extern unsigned int ways;
