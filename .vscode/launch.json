@@ -8,8 +8,13 @@
             "name": "gcc - Compilar y depurar el archivo activo",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/TP2/src/main/tp",
-            "args": [],
+            "program": "${workspaceFolder}/TP2/tp2",
+            "args": [
+                "-w 4 ",
+                "-c 8",
+                "-b 16",
+                "prueba1.mem"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

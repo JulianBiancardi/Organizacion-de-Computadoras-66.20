@@ -19,3 +19,9 @@ int memory_init() {
   memset(memory.data, 0, MAIN_MEMORY_SIZE);
   return NO_ERROR;
 }
+
+void memory_uninit() {
+  if (memory.data != NULL) {
+    free(memory.data);
+  }
+}

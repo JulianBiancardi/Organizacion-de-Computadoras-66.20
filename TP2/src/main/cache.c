@@ -1,6 +1,7 @@
 #include "cache.h"
 
 #include <math.h>
+#include <stdio.h>  //TODO delete
 #include <stdlib.h>
 
 #include "constantsTP2.h"
@@ -15,21 +16,25 @@ unsigned int cachesize = 0;
 unsigned int blocksize = 0;
 cache_t cache;
 
+//-------------------------------------------------------------
 /* Private functions*/
-
 static unsigned int _get_tag(int address) {
   unsigned int bit_offset = log2(blocksize);
   unsigned int bit_set = log2(cache.setsnum);
   unsigned int bit_tag = 16 - (bit_set + bit_offset);  // TODO 16 IS CONSTANT
 
-  unsigned int tag = (address >> (bit_offset + bit_set)) & bit_tag;
+  unsigned int tag = address >> (bit_offset + bit_set);
 
   return tag;
 }
 
 static unsigned int _get_offset(int address) {
   unsigned int bit_offset = log2(blocksize);
-  unsigned int offset = address & bit_offset;
+  unsigned int bit_set = log2(cache.setsnum);
+  unsigned int bit_tag = 16 - (bit_set + bit_offset);  // TODO 16 IS CONSTANT
+
+  unsigned short aux = address << (bit_tag + bit_set);
+  unsigned int offset = aux >> (bit_tag + bit_set);
 
   return offset;
 }
@@ -93,7 +98,8 @@ unsigned int cache_find_set(int address) {
   int bit_set = log2(cache.setsnum);
   int bit_tag = 16 - (bit_set + bit_offset);  // TODO 16 IS CONSTANT
 
-  unsigned int set = ((address << bit_tag) >> (bit_offset + bit_tag)) & bit_set;
+  unsigned short aux = (address << bit_tag);
+  unsigned int set = (aux >> (bit_offset + bit_tag));
 
   return set;
 }
@@ -153,9 +159,11 @@ void cache_write_block(int way, int setnum) {
 }
 
 unsigned char cache_read_byte(int address) {
-  unsigned int setnum = cache_find_set(address);
   unsigned int tag = _get_tag(address);
+  unsigned int setnum = cache_find_set(address);
   unsigned int offset = _get_offset(address);
+
+  printf("read address(%i): %u - %u - %u\n", address, tag, setnum, offset);
   for (size_t i = 0; i < ways; i++) {
     if (cache.sets[setnum].blocks[i].valid &&
         cache.sets[setnum].blocks[i].tag == tag) {
@@ -174,9 +182,11 @@ unsigned char cache_read_byte(int address) {
 }
 
 void cache_write_byte(int address, unsigned char value) {
-  unsigned int setnum = cache_find_set(address);
   unsigned int tag = _get_tag(address);
+  unsigned int setnum = cache_find_set(address);
   unsigned int offset = _get_offset(address);
+  printf("write address(%i): %u - %u - %u\n", address, tag, setnum, offset);
+
   for (size_t i = 0; i < ways; i++) {
     if (cache.sets[setnum].blocks[i].valid &&
         cache.sets[setnum].blocks[i].tag == tag) {
@@ -203,7 +213,7 @@ float cache_get_miss_rate() {
   return (cache.misses / (cache.misses + cache.hits)) * 100;
 }
 
-bool hit() { return cache.last_satuts; }
+bool cache_hit() { return cache.last_satuts; }
 
 void cache_uninit() {
   for (size_t setnum = 0; setnum < cache.setsnum; setnum++) {

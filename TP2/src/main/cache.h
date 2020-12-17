@@ -31,7 +31,7 @@ extern unsigned int blocksize;
 extern cache_t cache;
 
 /* Initializes the cache */
-int cache_init();  // TODO REMOVE THIS PARAMETERS
+int cache_init();
 
 /* Receives an address and returns the set which maps to that address. */
 unsigned int cache_find_set(int address);
@@ -59,7 +59,7 @@ void cache_write_byte(int address, unsigned char value);
 float cache_get_miss_rate();
 
 /* Returns if the last operation was hit or miss*/
-bool hit();
+bool cache_hit();
 
 /* Destroys the cache, releasing all of its resources. */
 void cache_uninit();

@@ -7,6 +7,10 @@ typedef struct memory {
 
 extern memory_t memory;
 
+/* Initializes the memory */
 int memory_init();
+
+/* Destroys the memory, releasing all of its resources. */
+void memory_uninit();
 
 #endif

@@ -53,10 +53,10 @@ endif
 all: tp0
 
 tp0: $(SOURCES)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(SOURCES) -o tp2
+	$(CC) $(CFLAGS)  $(SOURCES) -o tp2 $(LDFLAGS)
 
 tests: $(TESTS_SOURCES)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_SOURCES) -o tests.exe
-
+	$(CC) $(CFLAGS)  $(TESTS_SOURCES) -o tests.exe $(LDFLAGS)
+ 
 clean: 
 	rm tests.exe tp
