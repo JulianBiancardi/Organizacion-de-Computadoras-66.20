@@ -46,7 +46,7 @@ static void _read_tocache(unsigned int blocknum, unsigned int way,
   }
 
   for (size_t i = 0; i < blocksize; i++) {
-    current_block.data[i] = cache.memory->data[blocknum * blocksize + i];
+    current_block.data[i] = memory.data[blocknum * blocksize + i];
   }
 
   // current_block.numero = ++cache.ultimoBloque;
@@ -80,9 +80,6 @@ void cache_init() {
       cache.sets[i].blocks[j].date = 0;
     }
   }
-
-  cache.memory = malloc(sizeof(memory_t*));
-  memory_init(cache.memory);
 }
 
 unsigned int cache_find_set(int address) {
@@ -130,7 +127,7 @@ void cache_read_block(int blocknum) {
   // Write the block with the memory data
   for (size_t i = 0; i < blocksize; i++) {
     cache.sets[setnum].blocks[way].data[i] =
-        cache.memory->data[blocknum * blocksize + i];
+        memory.data[blocknum * blocksize + i];
   }
 
   // current_block.numero = ++cache.ultimoBloque; //TODO
@@ -148,7 +145,7 @@ void cache_write_block(int way, int setnum) {
   unsigned int address =
       (tag << (bit_set + bit_offset)) + (setnum << bit_offset);
   for (size_t i = 0; i < blocksize; i++) {
-    cache.memory->data[address + i] = cache.sets[setnum].blocks[way].data[i];
+    memory.data[address + i] = cache.sets[setnum].blocks[way].data[i];
   }
 }
 

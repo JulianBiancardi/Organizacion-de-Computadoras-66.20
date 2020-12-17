@@ -23,7 +23,6 @@ typedef struct set {
 } set_t;
 
 typedef struct cache {
-  memory_t* memory;
   set_t* sets;
   unsigned int setsnum;
   unsigned int hits;
