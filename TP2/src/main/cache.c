@@ -10,11 +10,6 @@
 
 /* Private functions*/
 
-// TODO Move to proper place
-unsigned int ways = 0;
-unsigned int cachesize = 0;
-unsigned int blocksize = 0;
-
 void memory_init(memory_t* memory) {
   memory->data = malloc(MAIN_MEMORY_SIZE);
   memset(memory->data, 0, MAIN_MEMORY_SIZE);
@@ -143,7 +138,18 @@ unsigned int cache_is_dirty(cache_t* self, int way, int setnum) {
 
 void cache_read_block(cache_t* self, int blocknum) {}
 
-void cache_write_block(cache_t* self, int way, int setnum) {}
+void cache_write_block(cache_t* self, int way, int setnum) {
+  unsigned int tag = self->sets[setnum].blocks[way].tag;
+
+  int bit_offset = log2(blocksize);
+  int bit_set = log2(self->setsnum);
+
+  unsigned int address =
+      (tag << (bit_set + bit_offset)) + (setnum << bit_offset);
+  for (size_t i = 0; i < blocksize; i++) {
+    self->memory->data[address + i] = self->sets[setnum].blocks[way].data[i];
+  }
+}
 
 unsigned char cache_read_byte(cache_t* self, int address) {
   unsigned int setnum = cache_find_set(self, address);
