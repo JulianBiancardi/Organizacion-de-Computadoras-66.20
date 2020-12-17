@@ -8,7 +8,7 @@ TESTS_SOURCES = $(wildcard src/tests/*.c) $(filter-out src/main/main.c, $(wildca
 ## COMPILER FLAGS ##
 CC = gcc
 std = c99
-# all_errors = yes
+all_errors = yes
 optimize = yes
 debug = yes
 

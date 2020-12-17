@@ -12,7 +12,7 @@ memory_t memory;
 
 int memory_init() {
   memory.data = malloc(MAIN_MEMORY_SIZE);
-  if (malloc == NULL) {
+  if (memory.data == NULL) {
     return ERROR;
   }
 
