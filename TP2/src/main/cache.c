@@ -211,10 +211,10 @@ void cache_write_byte(int address, unsigned char value) {
 }
 
 float cache_get_miss_rate() {
-  if ((cache.misses + cache.misses) == 0) {
+  if ((cache.misses + cache.hits) == 0) {
     return 0;
   }
-  return (cache.misses / (cache.misses + cache.hits)) * 100;
+  return ((float)cache.misses / (cache.misses + cache.hits)) * 100.0;
 }
 
 bool cache_hit() { return cache.last_satuts; }
