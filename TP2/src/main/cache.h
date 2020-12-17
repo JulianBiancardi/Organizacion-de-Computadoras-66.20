@@ -4,12 +4,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define MAIN_MEMORY_SIZE 65536
-
-typedef struct memory {
-  unsigned char* data;
-} memory_t;
-
 typedef struct block {
   unsigned int date;
   bool valid;
@@ -35,7 +29,6 @@ extern unsigned int ways;
 extern unsigned int cachesize;
 extern unsigned int blocksize;
 extern cache_t cache;
-extern memory_t memory;
 
 /* Initializes the cache */
 int cache_init();  // TODO REMOVE THIS PARAMETERS
