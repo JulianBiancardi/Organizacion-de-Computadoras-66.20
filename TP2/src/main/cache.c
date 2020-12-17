@@ -44,21 +44,12 @@ static unsigned int _get_memblock(unsigned int address) {
   return address >> bit_offset;
 }
 
-static void _read_tocache(unsigned int blocknum, unsigned int way,
-                          unsigned int setnum) {
-  block_t current_block = cache.sets[setnum].blocks[way];
-  if (current_block.valid && current_block.dirty) {
-    cache_write_block(way, setnum);  // Write the block in memory
+static void _increment_date(int setnum, int way_avoid) {
+  for (size_t way = 0; way < ways; way++) {
+    if (way != way_avoid) {
+      (cache.sets[setnum].blocks[way].date)++;
+    }
   }
-
-  for (size_t i = 0; i < blocksize; i++) {
-    current_block.data[i] = memory.data[blocknum * blocksize + i];
-  }
-
-  // current_block.numero = ++cache.ultimoBloque;
-  current_block.dirty = false;
-  current_block.valid = true;
-  current_block.tag = _get_tag(blocknum * blocksize);
 }
 //-------------------------------------------------------------
 
@@ -167,6 +158,8 @@ unsigned char cache_read_byte(int address) {
         cache.sets[setnum].blocks[i].tag == tag) {
       (cache.hits)++;
       cache.last_satuts = HIT;
+      cache.sets[setnum].blocks[i].date = 0;
+      _increment_date(setnum, i);
       return cache.sets[setnum].blocks[i].data[offset];
     }
   }
@@ -177,6 +170,8 @@ unsigned char cache_read_byte(int address) {
   cache_write_block(way,
                     setnum);  // Write the block in main memory if it is dirty
   cache_read_block(_get_memblock(address));  // TODO Simply use get_memblock?
+  cache.sets[setnum].blocks[way].date = 0;
+  _increment_date(setnum, way);
   return cache.sets[setnum].blocks[way].data[offset];
 }
 
@@ -194,6 +189,7 @@ void cache_write_byte(int address, unsigned char value) {
       cache.sets[setnum].blocks[i].data[offset] = value;
       cache.sets[setnum].blocks[i].dirty = true;
       cache.sets[setnum].blocks[i].date = 0;
+      _increment_date(setnum, i);
       return;
     }
   }
@@ -205,8 +201,10 @@ void cache_write_byte(int address, unsigned char value) {
                     setnum);  // Write the block in main memory if it is dirty
   cache_read_block(_get_memblock(address));  // TODO Simply use get_memblock?
 
-  cache.sets[setnum].blocks[way].dirty = true;
   cache.sets[setnum].blocks[way].data[offset] = value;
+  cache.sets[setnum].blocks[way].dirty = true;
+  cache.sets[setnum].blocks[way].date = 0;
+  _increment_date(setnum, way);
   return;
 }
 

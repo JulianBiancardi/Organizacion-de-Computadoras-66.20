@@ -1,15 +1,15 @@
-==15165== Memcheck, a memory error detector
-==15165== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==15165== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==15165== Command: ./tp2 -w 4 -c 8 -b 16 prueba1.mem
-==15165== Parent PID: 3289
-==15165== 
-==15165== 
-==15165== HEAP SUMMARY:
-==15165==     in use at exit: 0 bytes in 0 blocks
-==15165==   total heap usage: 646 allocs, 646 frees, 88,736 bytes allocated
-==15165== 
-==15165== All heap blocks were freed -- no leaks are possible
-==15165== 
-==15165== For counts of detected and suppressed errors, rerun with: -v
-==15165== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==17397== Memcheck, a memory error detector
+==17397== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==17397== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==17397== Command: ./tp2 -w 4 -c 8 -b 16 prueba1.mem
+==17397== Parent PID: 16154
+==17397== 
+==17397== 
+==17397== HEAP SUMMARY:
+==17397==     in use at exit: 0 bytes in 0 blocks
+==17397==   total heap usage: 646 allocs, 646 frees, 88,736 bytes allocated
+==17397== 
+==17397== All heap blocks were freed -- no leaks are possible
+==17397== 
+==17397== For counts of detected and suppressed errors, rerun with: -v
+==17397== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
