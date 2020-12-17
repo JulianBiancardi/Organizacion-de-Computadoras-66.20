@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "constantsTP2.h"
 
@@ -23,6 +24,9 @@ int file_reader_open(file_reader_t* self, char* file_name) {
   if (strcmp(file_name, "stdin") == 0) {
     self->file = stdin;
   } else {
+    if (access(file_name, F_OK) != 0) {
+      return ERROR;
+    }
     self->file = fopen(file_name, "r");
   }
   return NO_ERROR;
