@@ -12,10 +12,12 @@ int main(int argc, char** argv) {
       NO_ERROR) {
     return EXIT_FAILURE;
   }
+
+  file_reader_process(&file_reader, process_and_output, NULL);
+
   return EXIT_SUCCESS;
 }
 
 void process_and_output(char* line, size_t line_len, void* extra) {
-  processor_t* extra = (processor_t*)extra;
   process(line, line_len);
 }
