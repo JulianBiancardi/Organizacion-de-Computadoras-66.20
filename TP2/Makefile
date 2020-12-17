@@ -53,7 +53,7 @@ endif
 all: tp0
 
 tp0: $(SOURCES)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(SOURCES) -o tp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(SOURCES) -o tp2
 
 tests: $(TESTS_SOURCES)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_SOURCES) -o tests.exe
