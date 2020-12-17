@@ -3,9 +3,7 @@
 #include "args_parser.h"
 #include "cache.h"
 #include "constantsTP2.h"
-
-extern unsigned int mcd(unsigned int, unsigned int);
-extern unsigned int mcm(unsigned int, unsigned int);
+#include "file_reader.h"
 
 int main(int argc, char** argv) {
   file_reader_t file_reader;
