@@ -209,5 +209,17 @@ float cache_get_miss_rate(cache_t* self) {
 
 bool hit(cache_t* self) { return self->last_satuts; }
 
-void cache_uninit(cache_t* self) {}
+void cache_uninit(cache_t* self) {
+  if (self == NULL) {
+    return;
+  }
+
+  for (size_t setnum = 0; setnum < self->setsnum; setnum++) {
+    for (size_t waynum = 0; waynum < ways; waynum++) {
+      free(self->sets[setnum].blocks[waynum].data);
+    }
+    free(self->sets[setnum].blocks);
+  }
+  free(self->sets);
+}
 //-------------------------------------------------------------
