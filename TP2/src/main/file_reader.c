@@ -34,7 +34,10 @@ void file_reader_process(file_reader_t* self, callback_t callback,
   size_t line_len = 0;
 
   while (!feof(self->file)) {
-    size_t chars_read = getline(&line, &line_len, self->file);
+    ssize_t chars_read = getline(&line, &line_len, self->file);
+    if (chars_read < 0) {
+      break;
+    }
     callback(line, chars_read, extra);
   }
 
