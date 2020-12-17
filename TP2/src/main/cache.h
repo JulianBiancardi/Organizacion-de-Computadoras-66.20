@@ -27,7 +27,7 @@ typedef struct cache {
   set_t* sets;
   unsigned int setsnum;
   unsigned int hits;
-  unsigned int missses;
+  unsigned int misses;
   bool last_satuts;
   unsigned int last_block;  // TODO consider this
 } cache_t;
@@ -39,7 +39,7 @@ extern cache_t cache;
 extern memory_t memory;
 
 /* Initializes the cache */
-int cache_init();  // TODO REMOVE THIS PARAMETERS
+void cache_init();  // TODO REMOVE THIS PARAMETERS
 
 /* Receives an address and returns the set which maps to that address. */
 unsigned int cache_find_set(int address);
