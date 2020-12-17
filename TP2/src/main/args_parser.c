@@ -84,7 +84,7 @@ int static read_args(int argc, char** argv, file_writer_t* file_writer,
     return ERROR;
   }
 
-  file_writer_init(file_writer, output_file);
+  file_writer_open(file_writer, output_file);
 
   return NO_ERROR;
 }
@@ -123,6 +123,6 @@ int static get_input_file(int argc, char** argv, file_reader_t* file_reader) {
     print_help();
     return ERROR;
   }
-  file_reader_init(file_reader, argv[optind]);
+  file_reader_open(file_reader, argv[optind]);
   return NO_ERROR;
 }
