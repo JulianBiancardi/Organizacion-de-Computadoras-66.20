@@ -5,24 +5,25 @@
 #include <string.h>
 
 #include "cache.h"
+#include "memory.h"
 
 // TODO define function properly and choose better name
 void static error();
 
-void process(char* line, size_t line_len) {
-  char* ptr = strchr(line, ' ');
-  int chars_to_cmp = line_len;
+void process(char* instr, size_t instr_len) {
+  char* ptr = strchr(instr, ' ');
+  int chars_to_cmp = instr;
   if (ptr != NULL) {
-    chars_to_cmp = ptr - line;
+    chars_to_cmp = ptr - instr;
   }
 
-  if (strncmp(line, "init", chars_to_cmp) == 0) {
+  if (strncmp(instr, "init", chars_to_cmp) == 0) {
     init();
-  } else if (strncmp(line, "MR", chars_to_cmp) == 0) {
+  } else if (strncmp(instr, "MR", chars_to_cmp) == 0) {
     missrate();
-  } else if (strncmp(line, "R", chars_to_cmp) == 0) {
+  } else if (strncmp(instr, "R", chars_to_cmp) == 0) {
     read(ptr);
-  } else if (strncmp(line, "W", chars_to_cmp) == 0) {
+  } else if (strncmp(instr, "W", chars_to_cmp) == 0) {
     write(ptr);
   } else {
     error();

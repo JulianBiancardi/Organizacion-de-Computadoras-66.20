@@ -1,6 +1,8 @@
 #include "memory.h"
 
 #include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "constantsTP2.h"
 

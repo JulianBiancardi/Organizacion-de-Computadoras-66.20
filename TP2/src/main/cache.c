@@ -2,7 +2,6 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "constantsTP2.h"
 #include "memory.h"
