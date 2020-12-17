@@ -4,26 +4,35 @@
 
 #include <stdlib.h>
 
+#include "constantsTP2.h"
+
 #define BUF_SIZE 64
 
-int file_reader_init(file_reader_t* file_reader, char* file_name) {
-  file_reader->file = fopen(file_name, "w+");
+int file_reader_init(file_reader_t* self, char* file_name) {
+  if (strcmp(file_name, "stdin") == 0) {
+    self->file = stdin;
+  } else {
+    self->file = fopen(file_name, "r");
+  }
+  return NO_ERROR;
 }
 
-void file_reader_process(file_reader_t* file_reader, callback_t callback,
+void file_reader_process(file_reader_t* self, callback_t callback,
                          void* extra) {
   // Dynamic memory since getline might allocate according to documentation
   char* line = malloc(sizeof(char) * BUF_SIZE);
   size_t line_len = BUF_SIZE;
 
-  while (!feof(file_reader->file)) {
-    size_t chars_read = getline(&line, &line_len, file_reader->file);
+  while (!feof(self->file)) {
+    size_t chars_read = getline(&line, &line_len, self->file);
     callback(line, line_len, extra);
   }
 
   free(line);
 }
 
-void file_reader_destroy(file_reader_t* file_reader) {
-  fclose(file_reader->file);
+void file_reader_destroy(file_reader_t* self) {
+  if (self->file != stdin) {
+    fclose(self->file);
+  }
 }

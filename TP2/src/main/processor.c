@@ -13,7 +13,7 @@ void static error();
 void process_and_output(char* instr, size_t instr_len,
                         file_writer_t* file_writer) {
   char* ptr = strchr(instr, ' ');
-  int chars_to_cmp = instr;
+  int chars_to_cmp = instr_len;
   if (ptr != NULL) {
     chars_to_cmp = ptr - instr;
   }
