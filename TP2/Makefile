@@ -59,4 +59,4 @@ tests: $(TESTS_SOURCES)
 	$(CC) $(CFLAGS)  $(TESTS_SOURCES) -o tests.exe $(LDFLAGS)
  
 clean: 
-	rm tests.exe tp
+	rm tests.exe tp2
