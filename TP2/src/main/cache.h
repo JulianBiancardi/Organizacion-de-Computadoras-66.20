@@ -38,7 +38,7 @@ extern cache_t cache;
 extern memory_t memory;
 
 /* Initializes the cache */
-void cache_init();  // TODO REMOVE THIS PARAMETERS
+int cache_init();  // TODO REMOVE THIS PARAMETERS
 
 /* Receives an address and returns the set which maps to that address. */
 unsigned int cache_find_set(int address);

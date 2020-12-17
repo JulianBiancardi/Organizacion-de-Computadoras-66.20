@@ -1,6 +1,8 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 
+#include <stddef.h>
+
 void process(char* line, size_t line_len);
 
 void init();

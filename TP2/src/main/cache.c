@@ -10,10 +10,16 @@
 #define HIT 1
 #define MISS 0
 
+unsigned int ways = 0;
+unsigned int cachesize = 0;
+unsigned int blocksize = 0;
+cache_t cache;
+memory_t memory;
+
 /* Private functions*/
-void memory_init(memory_t* memory) {
-  memory->data = malloc(MAIN_MEMORY_SIZE);
-  memset(memory->data, 0, MAIN_MEMORY_SIZE);
+void memory_init() {
+  memory.data = malloc(MAIN_MEMORY_SIZE);
+  memset(memory.data, 0, MAIN_MEMORY_SIZE);
 }
 
 static unsigned int _get_tag(int address) {
@@ -58,7 +64,7 @@ static void _read_tocache(unsigned int blocknum, unsigned int way,
 
 //-------------------------------------------------------------
 /* Public functions */
-void cache_init() {
+int cache_init() {
   cache.setsnum = (cachesize * KB) / (blocksize * ways);
   cache.hits = 0;
   cache.misses = 0;
@@ -80,6 +86,8 @@ void cache_init() {
       cache.sets[i].blocks[j].date = 0;
     }
   }
+
+  return NO_ERROR;
 }
 
 unsigned int cache_find_set(int address) {
@@ -165,7 +173,7 @@ unsigned char cache_read_byte(int address) {
   (cache.misses)++;
   cache.last_satuts = MISS;
   unsigned int way = cache_find_lru(setnum);
-  cache_read_block(get_memblock(address));  // TODO Simply use get_memblock?
+  cache_read_block(_get_memblock(address));  // TODO Simply use get_memblock?
   //_read_tocache(self, , way, setnum);
   return cache.sets[setnum].blocks[way].data[offset];
 }
@@ -187,7 +195,7 @@ void cache_write_byte(int address, unsigned char value) {
   (cache.misses)++;
   cache.last_satuts = MISS;
   unsigned int way = cache_find_lru(setnum);  // Find the lru block
-  cache_read_block(get_memblock(address));    // TODO Simply use get_memblock?
+  cache_read_block(_get_memblock(address));   // TODO Simply use get_memblock?
   cache.sets[setnum].blocks[way].dirty = true;
   cache.sets[setnum].blocks[way].data[offset] = value;
   return;

@@ -6,6 +6,9 @@
 
 #include "cache.h"
 
+// TODO define function properly and choose better name
+void static error();
+
 void process(char* line, size_t line_len) {
   char* ptr = strchr(line, ' ');
   int chars_to_cmp = line_len;
@@ -26,18 +29,21 @@ void process(char* line, size_t line_len) {
   }
 }
 
-void init() { cache_init(NULL); }
+void init() {
+  cache_init();
+  memory_init();
+}
 
 void read(char* instr) {
   int address = (int)strtol(instr, (char**)NULL, 10);
-  unsigned char byte = cache_read_byte(NULL, address);
+  unsigned char byte = cache_read_byte(address);
 }
 void write(char* instr) {
   char* next;
-  int address = (int)strtol(instr, next, 10);
+  int address = (int)strtol(instr, &next, 10);
   // Skip comma and space
   unsigned int value = (unsigned int)strtoul(next + 2, (char**)NULL, 10);
-  cache_write_byte(NULL, address, value);
+  cache_write_byte(address, value);
 }
 
 void missrate() { cache_get_miss_rate(NULL); }
