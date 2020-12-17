@@ -58,7 +58,10 @@ void write(char* instr, file_writer_t* file_writer) {
 
 void missrate(file_writer_t* file_writer) {
   float miss_rate = cache_get_miss_rate();
-  // file_writer_write(file_writer, miss_rate, 1);
+
+  char message[64];
+  int ret = snprintf(message, sizeof message, "%f", miss_rate);
+  file_writer_write(file_writer, message, strlen(message));
 }
 
 void error() {}

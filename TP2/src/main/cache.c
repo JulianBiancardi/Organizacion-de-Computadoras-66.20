@@ -128,11 +128,6 @@ void cache_read_block(int blocknum) {
   unsigned int setnum = cache_find_set(blocknum << bit_offset);
   unsigned int way = cache_find_lru(setnum);  // Find the lru block
 
-  // Verify if the block is dirty and write the block in memory
-  if (cache.sets[setnum].blocks[way].valid && cache_is_dirty(way, setnum)) {
-    cache_write_block(way, setnum);
-  }
-
   // Write the block with the memory data
   for (size_t i = 0; i < blocksize; i++) {
     cache.sets[setnum].blocks[way].data[i] =
@@ -140,21 +135,24 @@ void cache_read_block(int blocknum) {
   }
 
   // current_block.numero = ++cache.ultimoBloque; //TODO
-  cache.sets[setnum].blocks[way].dirty = false;
   cache.sets[setnum].blocks[way].valid = true;
+  cache.sets[setnum].blocks[way].dirty = false;
   cache.sets[setnum].blocks[way].tag = _get_tag(blocknum * blocksize);
 }
 
 void cache_write_block(int way, int setnum) {
-  unsigned int tag = cache.sets[setnum].blocks[way].tag;
+  // Verify if the block is dirty and write the block in memory
+  if (cache.sets[setnum].blocks[way].valid && cache_is_dirty(way, setnum)) {
+    unsigned int tag = cache.sets[setnum].blocks[way].tag;
 
-  int bit_offset = log2(blocksize);
-  int bit_set = log2(cache.setsnum);
+    int bit_offset = log2(blocksize);
+    int bit_set = log2(cache.setsnum);
 
-  unsigned int address =
-      (tag << (bit_set + bit_offset)) + (setnum << bit_offset);
-  for (size_t i = 0; i < blocksize; i++) {
-    memory.data[address + i] = cache.sets[setnum].blocks[way].data[i];
+    unsigned int address =
+        (tag << (bit_set + bit_offset)) + (setnum << bit_offset);
+    for (size_t i = 0; i < blocksize; i++) {
+      memory.data[address + i] = cache.sets[setnum].blocks[way].data[i];
+    }
   }
 }
 
@@ -175,9 +173,10 @@ unsigned char cache_read_byte(int address) {
   // El dato no se encuentra en cache => cargo el bloque y devuelvo el dato.
   (cache.misses)++;
   cache.last_satuts = MISS;
-  unsigned int way = cache_find_lru(setnum);
+  unsigned int way = cache_find_lru(setnum);  // Find the lru block
+  cache_write_block(way,
+                    setnum);  // Write the block in main memory if it is dirty
   cache_read_block(_get_memblock(address));  // TODO Simply use get_memblock?
-  //_read_tocache(self, , way, setnum);
   return cache.sets[setnum].blocks[way].data[offset];
 }
 
@@ -193,6 +192,8 @@ void cache_write_byte(int address, unsigned char value) {
       (cache.hits)++;
       cache.last_satuts = HIT;
       cache.sets[setnum].blocks[i].data[offset] = value;
+      cache.sets[setnum].blocks[i].dirty = true;
+      cache.sets[setnum].blocks[i].date = 0;
       return;
     }
   }
@@ -200,7 +201,10 @@ void cache_write_byte(int address, unsigned char value) {
   (cache.misses)++;
   cache.last_satuts = MISS;
   unsigned int way = cache_find_lru(setnum);  // Find the lru block
-  cache_read_block(_get_memblock(address));   // TODO Simply use get_memblock?
+  cache_write_block(way,
+                    setnum);  // Write the block in main memory if it is dirty
+  cache_read_block(_get_memblock(address));  // TODO Simply use get_memblock?
+
   cache.sets[setnum].blocks[way].dirty = true;
   cache.sets[setnum].blocks[way].data[offset] = value;
   return;
