@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "constantsTP2.h"
+#include "memory.h"
 
 #define KB 1024
 #define HIT 1
@@ -14,13 +15,8 @@ unsigned int ways = 0;
 unsigned int cachesize = 0;
 unsigned int blocksize = 0;
 cache_t cache;
-memory_t memory;
 
 /* Private functions*/
-void memory_init() {
-  memory.data = malloc(MAIN_MEMORY_SIZE);
-  memset(memory.data, 0, MAIN_MEMORY_SIZE);
-}
 
 static unsigned int _get_tag(int address) {
   unsigned int bit_offset = log2(blocksize);

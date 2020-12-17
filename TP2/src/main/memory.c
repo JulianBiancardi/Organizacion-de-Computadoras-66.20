@@ -4,7 +4,11 @@
 
 #include "constantsTP2.h"
 
-void memory_init() {
+#define MAIN_MEMORY_SIZE 65536
+
+memory_t memory;
+
+int memory_init() {
   memory.data = malloc(MAIN_MEMORY_SIZE);
   if (malloc == NULL) {
     return ERROR;
