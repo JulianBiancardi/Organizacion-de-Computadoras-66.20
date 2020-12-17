@@ -11,6 +11,7 @@ int static read_args(int argc, char** argv, file_reader_t* output,
                      unsigned int* cs, unsigned int* w, unsigned int* bs);
 void static print_version();
 void static print_help();
+int static get_output_file(int argc, char** argv, file_reader_t* file_reader);
 
 int get_arguments(int argc, char** argv, file_reader_t* file_reader,
                   unsigned int* cs, unsigned int* w, unsigned int* bs) {

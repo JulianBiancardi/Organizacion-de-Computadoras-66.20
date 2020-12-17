@@ -32,8 +32,8 @@ typedef struct cache {
   unsigned int setsnum;
   unsigned int hits;
   unsigned int missses;
-  unsigned int last_status;
-  unsigned int last_block;
+  bool last_satuts;
+  unsigned int last_block;  // TODO consider this
 } cache_t;
 
 /* Initializes the cache */
@@ -63,6 +63,9 @@ void cache_write_byte(cache_t* self, int address, unsigned char value);
 
 /* Returns the miss rate from the cache. */
 float cache_get_miss_rate(cache_t* self);
+
+/* Returns if the last operation was hit or miss*/
+bool hit(cache_t* self);
 
 /* Destroys the cache, releasing all of its resources. */
 void cache_uninit(cache_t* self);
