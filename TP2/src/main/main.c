@@ -17,7 +17,8 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  file_reader_process(&file_reader, process_and_output, &file_writer);
+  file_reader_process(&file_reader, (callback_t)process_and_output,
+                      &file_writer);
 
   file_writer_destroy(&file_writer);
   file_reader_destroy(&file_reader);

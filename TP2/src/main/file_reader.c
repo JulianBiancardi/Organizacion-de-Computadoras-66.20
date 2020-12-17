@@ -24,6 +24,6 @@ void file_reader_process(file_reader_t* file_reader, callback_t callback,
   free(line);
 }
 
-void file_reader_uninit(file_reader_t* file_reader) {
+void file_reader_destroy(file_reader_t* file_reader) {
   fclose(file_reader->file);
 }
