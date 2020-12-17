@@ -19,13 +19,12 @@ int file_reader_init(file_reader_t* self, char* file_name) {
 
 void file_reader_process(file_reader_t* self, callback_t callback,
                          void* extra) {
-  // Dynamic memory since getline might allocate according to documentation
-  char* line = malloc(sizeof(char) * BUF_SIZE);
-  size_t line_len = BUF_SIZE;
+  char* line = NULL;
+  size_t line_len = 0;
 
   while (!feof(self->file)) {
     size_t chars_read = getline(&line, &line_len, self->file);
-    callback(line, line_len, extra);
+    callback(line, chars_read, extra);
   }
 
   free(line);
