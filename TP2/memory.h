@@ -9,4 +9,6 @@ typedef struct memory {
 
 extern memory_t memory;
 
+int memory_init();
+
 #endif
