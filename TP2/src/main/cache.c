@@ -70,15 +70,18 @@ int cache_init(cache_t* self) {
   // Number of sets in the cache
   self->sets = (set_t*)malloc(sizeof(set_t) * self->setsnum);
   if (self->sets == NULL) {
+    return ERROR;
   }
 
   // TODO VERIFY THE NULL POINTER
   for (size_t i = 0; i < self->setsnum; i++) {
     self->sets[i].blocks = (block_t*)malloc(sizeof(block_t) * ways);
     for (size_t j = 0; j < ways; j++) {
-      self->sets[i].blocks[j].data = calloc(blocksize, sizeof(unsigned char));
-      self->sets[i].blocks[j].valid = false;
-      self->sets[i].blocks[j].dirty = false;
+      block_t current_block = self->sets[i].blocks[j];
+      current_block.data = calloc(blocksize, sizeof(unsigned char));
+      current_block.valid = false;
+      current_block.dirty = false;
+      current_block.date = 0;
     }
   }
 
