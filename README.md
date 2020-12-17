@@ -18,5 +18,6 @@ Repositorio para la Materia Organización de Computadoras [6620]
 
 * [TP0](https://github.com/JulianBiancardi/Organizasion-de-Computadoras-66.20/tree/main/TP0)
 * [TP1](https://github.com/JulianBiancardi/Organizasion-de-Computadoras-66.20/tree/main/TP1)
+* [TP2](https://github.com/JulianBiancardi/Organizasion-de-Computadoras-66.20/tree/main/TP2)
 
 
