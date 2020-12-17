@@ -34,9 +34,9 @@ size_t file_writer_print(file_writer_t* self, const char* format, ...) {
   va_start(args, format);
   va_copy(args_copy, args);
 
-  ssize_t msg_len = vsnprintf(NULL, 0, format, args);
+  ssize_t msg_len = vsnprintf(NULL, 0, format, args) + 1;
   char msg[msg_len];
-  vsnprintf(msg, msg_len, format, args);
+  vsnprintf(msg, msg_len, format, args_copy);
 
   va_end(args_copy);
   va_end(args);

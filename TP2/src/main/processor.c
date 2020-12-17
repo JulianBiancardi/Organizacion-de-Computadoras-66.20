@@ -7,11 +7,11 @@
 #include "cache.h"
 #include "memory.h"
 
-#define HIT "hit\n"
-#define MISS "miss\n"
+#define HIT "HIT"
+#define MISS "MISS"
 
-// TODO define function properly and choose better name
-void static error();
+void static invalid_instruction(char* instr, size_t instr_len,
+                                file_writer_t* file_writer);
 
 void process_and_output(char* instr, size_t instr_len,
                         file_writer_t* file_writer) {
@@ -30,7 +30,7 @@ void process_and_output(char* instr, size_t instr_len,
   } else if (strncmp(instr, "W", chars_to_cmp) == 0) {
     write(ptr, file_writer);
   } else {
-    error(instr, instr_len, file_writer);
+    invalid_instruction(instr, instr_len, file_writer);
   }
 }
 
@@ -42,9 +42,12 @@ void init() {
 void read(char* instr, file_writer_t* file_writer) {
   int address = (int)strtol(instr, (char**)NULL, 10);
   unsigned char byte = cache_read_byte(address);
-  char* message = cache_hit() ? HIT : MISS;
-  file_writer_write(file_writer, message, strlen(message));
+
+  char* hit_or_miss = cache_hit() ? HIT : MISS;
+  file_writer_print(file_writer, "READ %d -> %02hhX - %s\n", address, byte,
+                    hit_or_miss);
 }
+
 void write(char* instr, file_writer_t* file_writer) {
   char* next;
   int address = (int)strtol(instr, &next, 10);
@@ -52,14 +55,16 @@ void write(char* instr, file_writer_t* file_writer) {
   unsigned int value = (unsigned int)strtoul(next + 2, (char**)NULL, 10);
   cache_write_byte(address, value);
 
-  char* message = cache_hit() ? HIT : MISS;
-  file_writer_write(file_writer, message, strlen(message));
+  char* hit_or_miss = cache_hit() ? HIT : MISS;
+  file_writer_print(file_writer, "WRITE %02hhX -> %d - %s\n", value, address,
+                    hit_or_miss);
 }
 
 void missrate(file_writer_t* file_writer) {
   file_writer_print(file_writer, "MISS-RATE: %.1f %%\n", cache_get_miss_rate());
 }
 
-void error(char* instr, size_t instr_len, file_writer_t* file_writer) {
+void invalid_instruction(char* instr, size_t instr_len,
+                         file_writer_t* file_writer) {
   file_writer_print(file_writer, "Invalid Instruction: %s\n", instr);
 }
