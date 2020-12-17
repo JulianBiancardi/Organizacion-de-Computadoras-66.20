@@ -7,18 +7,19 @@
 #include "constantsTP2.h"
 
 #define KB 1024
+#define HIT 1
+#define MISS 0
 
 /* Private functions*/
-
 void memory_init(memory_t* memory) {
   memory->data = malloc(MAIN_MEMORY_SIZE);
   memset(memory->data, 0, MAIN_MEMORY_SIZE);
 }
 
 static unsigned int _get_tag(cache_t* self, int address) {
-  int bit_offset = log2(blocksize);
-  int bit_set = log2(self->setsnum);
-  int bit_tag = 16 - (bit_set + bit_offset);  // TODO 16 IS CONSTANT
+  unsigned int bit_offset = log2(blocksize);
+  unsigned int bit_set = log2(self->setsnum);
+  unsigned int bit_tag = 16 - (bit_set + bit_offset);  // TODO 16 IS CONSTANT
 
   unsigned int tag = (address >> (bit_offset + bit_set)) & bit_tag;
 
@@ -26,35 +27,22 @@ static unsigned int _get_tag(cache_t* self, int address) {
 }
 
 static unsigned int _get_offset(cache_t* self, int address) {
-  int bit_offset = log2(blocksize);
+  unsigned int bit_offset = log2(blocksize);
   unsigned int offset = address & bit_offset;
 
   return offset;
 }
 
 static unsigned int _get_memblock(cache_t* self, unsigned int address) {
-  int bit_offset = log2(blocksize);
+  unsigned int bit_offset = log2(blocksize);
   return address >> bit_offset;
-}
-
-static void _write_tomem(cache_t* self, unsigned int way, unsigned int setnum) {
-  unsigned int tag = self->sets[setnum].blocks[way].tag;
-
-  int bit_offset = log2(blocksize);
-  int bit_set = log2(self->setsnum);
-
-  unsigned int address =
-      (tag << (bit_set + bit_offset)) + (setnum << bit_offset);
-  for (size_t i = 0; i < blocksize; i++) {
-    self->memory->data[address + i] = self->sets[setnum].blocks[way].data[i];
-  }
 }
 
 static void _read_tocache(cache_t* self, unsigned int blocknum,
                           unsigned int way, unsigned int setnum) {
   block_t current_block = self->sets[setnum].blocks[way];
   if (current_block.valid && current_block.dirty) {
-    _write_tomem(self, way, setnum);  // Write the block in memory
+    cache_write_block(self, way, setnum);  // Write the block in memory
   }
 
   for (size_t i = 0; i < blocksize; i++) {
@@ -66,7 +54,6 @@ static void _read_tocache(cache_t* self, unsigned int blocknum,
   current_block.valid = true;
   current_block.tag = _get_tag(self, blocknum * blocksize);
 }
-
 //-------------------------------------------------------------
 
 //-------------------------------------------------------------
@@ -78,10 +65,12 @@ int cache_init(cache_t* self) {
   self->setsnum = (cachesize * KB) / (blocksize * ways);
   self->hits = 0;
   self->missses = 0;
+  self->last_satuts = HIT;
 
   // Number of sets in the cache
   self->sets = (set_t*)malloc(sizeof(set_t) * self->setsnum);
   if (self->sets == NULL) {
+    return ERROR;
   }
 
   // TODO VERIFY THE NULL POINTER
@@ -91,6 +80,7 @@ int cache_init(cache_t* self) {
       self->sets[i].blocks[j].data = calloc(blocksize, sizeof(unsigned char));
       self->sets[i].blocks[j].valid = false;
       self->sets[i].blocks[j].dirty = false;
+      self->sets[i].blocks[j].date = 0;
     }
   }
 
@@ -127,16 +117,31 @@ unsigned int cache_find_lru(cache_t* self, int setnum) {
 }
 
 unsigned int cache_is_dirty(cache_t* self, int way, int setnum) {
-  if (setnum < 0 || setnum > self->setsnum) {
-    return (unsigned int)ERROR;
-  }
-  if (way < 0 || way > ways) {
-    return (unsigned int)ERROR;
-  }
-  return self->sets[setnum].blocks[way].dirty;
+  return (self->sets[setnum].blocks[way].dirty);
 }
 
-void cache_read_block(cache_t* self, int blocknum) {}
+void cache_read_block(cache_t* self, int blocknum) {
+  int bit_offset = log2(blocksize);
+  unsigned int setnum = cache_find_set(self, blocknum << bit_offset);
+  unsigned int way = cache_find_lru(self, setnum);  // Find the lru block
+
+  // Verify if the block is dirty and write the block in memory
+  if (self->sets[setnum].blocks[way].valid &&
+      cache_is_dirty(self, way, setnum)) {
+    cache_write_block(self, way, setnum);
+  }
+
+  // Write the block with the memory data
+  for (size_t i = 0; i < blocksize; i++) {
+    self->sets[setnum].blocks[way].data[i] =
+        self->memory->data[blocknum * blocksize + i];
+  }
+
+  // current_block.numero = ++cache.ultimoBloque; //TODO
+  self->sets[setnum].blocks[way].dirty = false;
+  self->sets[setnum].blocks[way].valid = true;
+  self->sets[setnum].blocks[way].tag = _get_tag(self, blocknum * blocksize);
+}
 
 void cache_write_block(cache_t* self, int way, int setnum) {
   unsigned int tag = self->sets[setnum].blocks[way].tag;
@@ -156,17 +161,19 @@ unsigned char cache_read_byte(cache_t* self, int address) {
   unsigned int tag = _get_tag(self, address);
   unsigned int offset = _get_offset(self, address);
   for (size_t i = 0; i < ways; i++) {
-    block_t current_block = self->sets[setnum].blocks[i];
-    if (current_block.valid && current_block.tag == tag) {
+    if (self->sets[setnum].blocks[i].valid &&
+        self->sets[setnum].blocks[i].tag == tag) {
       (self->hits)++;
-      return current_block.data[offset];
+      self->last_satuts = HIT;
+      return self->sets[setnum].blocks[i].data[offset];
     }
   }
   // El dato no se encuentra en cache => cargo el bloque y devuelvo el dato.
   (self->missses)++;
-
+  self->last_satuts = MISS;
   unsigned int way = cache_find_lru(self, setnum);
-  _read_tocache(self, _get_memblock(self, address), way, setnum);
+  cache_read_block(self, _get_memblock(self, address));
+  //_read_tocache(self, , way, setnum);
   return self->sets[setnum].blocks[way].data[offset];
 }
 
@@ -175,18 +182,19 @@ void cache_write_byte(cache_t* self, int address, unsigned char value) {
   unsigned int tag = _get_tag(self, address);
   unsigned int offset = _get_offset(self, address);
   for (size_t i = 0; i < ways; i++) {
-    block_t current_block = self->sets[setnum].blocks[i];
-    if (current_block.valid && current_block.tag == tag) {
+    if (self->sets[setnum].blocks[i].valid &&
+        self->sets[setnum].blocks[i].tag == tag) {
       (self->hits)++;
-      current_block.data[offset] = value;
+      self->last_satuts = HIT;
+      self->sets[setnum].blocks[i].data[offset] = value;
       return;
     }
   }
   // El dato no se encuentra en cache => cargo el bloque y lo escribo.
   (self->missses)++;
-
-  unsigned int way = cache_find_lru(self, setnum);
-  _read_tocache(self, _get_memblock(self, address), way, setnum);
+  self->last_satuts = MISS;
+  unsigned int way = cache_find_lru(self, setnum);  // Find the lru block
+  cache_read_block(self, _get_memblock(self, address));
   self->sets[setnum].blocks[way].dirty = true;
   self->sets[setnum].blocks[way].data[offset] = value;
   return;
@@ -199,5 +207,19 @@ float cache_get_miss_rate(cache_t* self) {
   return (self->missses / (self->missses + self->hits)) * 100;
 }
 
-void cache_uninit(cache_t* self) {}
+bool hit(cache_t* self) { return self->last_satuts; }
+
+void cache_uninit(cache_t* self) {
+  if (self == NULL) {
+    return;
+  }
+
+  for (size_t setnum = 0; setnum < self->setsnum; setnum++) {
+    for (size_t waynum = 0; waynum < ways; waynum++) {
+      free(self->sets[setnum].blocks[waynum].data);
+    }
+    free(self->sets[setnum].blocks);
+  }
+  free(self->sets);
+}
 //-------------------------------------------------------------

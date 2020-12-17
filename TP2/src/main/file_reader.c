@@ -2,6 +2,8 @@
 
 #include "file_reader.h"
 
+#include <stdlib.h>
+
 #define BUF_SIZE 64
 
 int file_reader_init(file_reader_t* file_reader, char* file_name) {
@@ -11,7 +13,7 @@ int file_reader_init(file_reader_t* file_reader, char* file_name) {
 void file_reader_process(file_reader_t* file_reader, callback_t callback,
                          void* extra) {
   // Dynamic memory since getline might allocate according to documentation
-  char line = malloc(sizeof(char) * BUF_SIZE);
+  char* line = malloc(sizeof(char) * BUF_SIZE);
   size_t line_len = BUF_SIZE;
 
   while (!feof(file_reader->file)) {
