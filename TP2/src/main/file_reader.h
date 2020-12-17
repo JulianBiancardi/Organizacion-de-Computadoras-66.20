@@ -9,11 +9,12 @@ typedef struct file_reader {
   FILE* file;
 } file_reader_t;
 
-int file_reader_init(file_reader_t* file_reader, char* file_name);
+int file_reader_init(file_reader_t* self);
 
-void file_reader_process(file_reader_t* file_reader, callback_t callback,
-                         void* extra);
+int file_reader_open(file_reader_t* self, char* file_name);
 
-void file_reader_destroy(file_reader_t* file_reader);
+void file_reader_process(file_reader_t* self, callback_t callback, void* extra);
+
+void file_reader_destroy(file_reader_t* self);
 
 #endif

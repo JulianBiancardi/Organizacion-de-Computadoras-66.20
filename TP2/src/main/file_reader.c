@@ -9,7 +9,16 @@
 
 #define BUF_SIZE 64
 
-int file_reader_init(file_reader_t* self, char* file_name) {
+int file_reader_init(file_reader_t* self) {
+  self->file = stdin;
+  return NO_ERROR;
+}
+
+int file_reader_open(file_reader_t* self, char* file_name) {
+  if (self->file != stdin) {
+    fclose(self->file);
+  }
+
   if (strcmp(file_name, "stdin") == 0) {
     self->file = stdin;
   } else {
