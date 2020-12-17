@@ -7,7 +7,7 @@
 #include "memory.h"
 
 #define KB 1024
-#define MEMORY_SIZE_KB 16
+#define ADDR_MEMORY_BITS 16  // 64KB MEMORY
 #define HIT true
 #define MISS false
 
@@ -50,7 +50,7 @@ int cache_init() {
   cache.setsnum = (cachesize * KB) / (blocksize * ways);
   cache.bits_offset = log2(blocksize);
   cache.bits_set = log2(cache.setsnum);
-  cache.bits_tag = MEMORY_SIZE_KB - (cache.bits_set + cache.bits_offset);
+  cache.bits_tag = ADDR_MEMORY_BITS - (cache.bits_set + cache.bits_offset);
 
   // Number of sets in the cache
   cache.sets = (set_t*)malloc(sizeof(set_t) * cache.setsnum);
