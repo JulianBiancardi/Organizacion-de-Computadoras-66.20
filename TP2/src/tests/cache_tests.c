@@ -14,8 +14,9 @@ int static cache_hit_test();
 int static cache_miss_rate_test();
 int static cache_tag_miss_test();
 int static cache_way_filling_test();
-int static cache_full_block_hit_test();
+int static cache_find_lru_test();
 int static cache_lru_block_replacement_test();
+int static cache_full_block_hit_test();
 
 void cache_tests() {
   begin_tests("CACHE");
@@ -39,6 +40,8 @@ void cache_tests() {
              cache_tag_miss_test, NO_ERROR);
   print_test("The cache doesn't replace a block if another way is free",
              cache_way_filling_test, NO_ERROR);
+  print_test("The cache finds the least recently used block correctly",
+             cache_find_lru_test, NO_ERROR);
   print_test(
       "The cache replaces the least recently used block if the set is full",
       cache_lru_block_replacement_test, NO_ERROR);
@@ -206,6 +209,27 @@ int static cache_way_filling_test() {
   cache_read_byte(0x4321);
   if (!cache_hit()) {
     result = ERROR;
+  }
+
+  cache_uninit();
+  memory_uninit();
+  return result;
+}
+
+int static cache_find_lru_test() {
+  cache_init();
+  memory_init();
+  int result = NO_ERROR;
+
+  cache_read_byte(0x4321);
+  cache_read_byte(0x5321);
+  if (cache_find_lru(0xc8) != 0) {
+    result ERROR;
+  }
+
+  cache_read_byte(0x6321);
+  if (cache_find_lru(0xc8) != 1) {
+    result ERROR;
   }
 
   cache_uninit();
