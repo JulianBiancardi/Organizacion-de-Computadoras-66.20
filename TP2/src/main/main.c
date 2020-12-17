@@ -3,6 +3,7 @@
 #include "args_parser.h"
 #include "cache.h"
 #include "constantsTP2.h"
+#include "file_reader.h"
 
 int main(int argc, char** argv) {
   file_reader_t file_reader;
