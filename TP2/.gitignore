@@ -1,1 +1,4 @@
-.vgcore
+vgcore.*
+tp2
+tests.exe
+.vscode

@@ -9,6 +9,7 @@
 
 int static read_args(int argc, char** argv, file_writer_t* file_writer,
                      unsigned int* cs, unsigned int* w, unsigned int* bs);
+int static validate_cache_parameters(int cs, int bs, int w);
 void static print_version();
 void static print_help();
 int static get_input_file(int argc, char** argv, file_reader_t* file_reader);
@@ -17,6 +18,10 @@ int get_arguments(int argc, char** argv, file_reader_t* file_reader,
                   file_writer_t* file_writer, unsigned int* cs, unsigned int* w,
                   unsigned int* bs) {
   if (read_args(argc, argv, file_writer, cs, w, bs) != NO_ERROR) {
+    return ERROR;
+  }
+
+  if (validate_cache_parameters(*cs, *w, *bs) != NO_ERROR) {
     return ERROR;
   }
 
@@ -56,7 +61,9 @@ int static read_args(int argc, char** argv, file_writer_t* file_writer,
         print_version();
         return ERROR;
       case 'o':
-        file_writer_open(file_writer, optarg);
+        if (file_writer_open(file_writer, optarg) != NO_ERROR) {
+          return ERROR;
+        }
         break;
       case 'w':
         *ways = (unsigned int)strtoul(optarg, (char**)NULL, 10);
@@ -108,6 +115,14 @@ void static print_help() {
   printf("\ttp2 -w 4 -cs 8 -bs 16 prueba1.mem\n");
 }
 
+int static validate_cache_parameters(int cs, int bs, int w) {
+  if ((cs * 1024) % (bs * w) != 0) {
+    fprintf(stderr, "Command Error: Cache parameters are invalid.\n");
+    return ERROR;
+  }
+  return NO_ERROR;
+}
+
 int static get_input_file(int argc, char** argv, file_reader_t* file_reader) {
   if (argc > optind + 1) {
     fprintf(stderr, "Command Error: Too many arguments provided.\n");
@@ -119,6 +134,8 @@ int static get_input_file(int argc, char** argv, file_reader_t* file_reader) {
     print_help();
     return ERROR;
   }
-  file_reader_open(file_reader, argv[optind]);
+  if (file_reader_open(file_reader, argv[optind]) != NO_ERROR) {
+    return ERROR;
+  }
   return NO_ERROR;
 }

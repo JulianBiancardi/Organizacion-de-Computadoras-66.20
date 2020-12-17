@@ -30,6 +30,7 @@ typedef struct cache {
 extern unsigned int ways;
 extern unsigned int cachesize;
 extern unsigned int blocksize;
+extern bool cache_initialized;
 extern cache_t cache;
 
 /* Initializes the cache */

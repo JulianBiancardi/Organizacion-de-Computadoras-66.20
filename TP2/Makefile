@@ -8,7 +8,7 @@ TESTS_SOURCES = $(wildcard src/tests/*.c) $(filter-out src/main/main.c, $(wildca
 ## COMPILER FLAGS ##
 CC = gcc
 std = c99
-# all_errors = yes
+all_errors = yes
 optimize = yes
 debug = yes
 
@@ -59,4 +59,4 @@ tests: $(TESTS_SOURCES)
 	$(CC) $(CFLAGS)  $(TESTS_SOURCES) -o tests.exe $(LDFLAGS)
  
 clean: 
-	rm tests.exe tp
+	rm tests.exe tp2

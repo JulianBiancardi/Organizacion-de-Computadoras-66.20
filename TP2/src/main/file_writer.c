@@ -6,7 +6,10 @@
 
 #include "constantsTP2.h"
 
-int file_writer_init(file_writer_t* self) { self->file = stdout; }
+int file_writer_init(file_writer_t* self) {
+  self->file = stdout;
+  return NO_ERROR;
+}
 
 int file_writer_open(file_writer_t* self, const char* file_name) {
   if (self->file != stdout) {
@@ -29,19 +32,10 @@ size_t file_writer_write(file_writer_t* self, const char* stream,
 
 size_t file_writer_print(file_writer_t* self, const char* format, ...) {
   va_list args;
-  va_list args_copy;
-
   va_start(args, format);
-  va_copy(args_copy, args);
-
-  ssize_t msg_len = vsnprintf(NULL, 0, format, args) + 1;
-  char msg[msg_len];
-  vsnprintf(msg, msg_len, format, args_copy);
-
-  va_end(args_copy);
+  size_t chars = vfprintf(self->file, format, args);
   va_end(args);
-
-  file_writer_write(self, msg, msg_len);
+  return chars;
 }
 
 void file_writer_destroy(file_writer_t* self) {
