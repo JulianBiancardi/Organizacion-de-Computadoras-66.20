@@ -9,6 +9,7 @@
 
 int static read_args(int argc, char** argv, file_writer_t* file_writer,
                      unsigned int* cs, unsigned int* w, unsigned int* bs);
+int static validate_cache_parameters(int cs, int bs, int w);
 void static print_version();
 void static print_help();
 int static get_input_file(int argc, char** argv, file_reader_t* file_reader);
@@ -17,6 +18,10 @@ int get_arguments(int argc, char** argv, file_reader_t* file_reader,
                   file_writer_t* file_writer, unsigned int* cs, unsigned int* w,
                   unsigned int* bs) {
   if (read_args(argc, argv, file_writer, cs, w, bs) != NO_ERROR) {
+    return ERROR;
+  }
+
+  if (validate_cache_parameters(*cs, *w, *bs) != NO_ERROR) {
     return ERROR;
   }
 
@@ -108,6 +113,14 @@ void static print_help() {
   printf("\nExamples:\n\n");
 
   printf("\ttp2 -w 4 -cs 8 -bs 16 prueba1.mem\n");
+}
+
+int static validate_cache_parameters(int cs, int bs, int w) {
+  if ((cs * 1024) % (bs * w) != 0) {
+    fprintf(stderr, "Command Error: Cache parameters are invalid.\n");
+    return ERROR;
+  }
+  return NO_ERROR;
 }
 
 int static get_input_file(int argc, char** argv, file_reader_t* file_reader) {
