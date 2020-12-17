@@ -44,6 +44,7 @@ int static read_args(int argc, char** argv, file_reader_t* file_reader,
         print_version();
         return END;
       case 'o':
+        file_reader_init(file_reader, optarg);
         break;
       case 'w':
         *w = (unsigned int)strtoul(optarg, (char**)NULL, 10);
