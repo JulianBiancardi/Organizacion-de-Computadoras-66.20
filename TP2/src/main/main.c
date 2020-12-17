@@ -10,12 +10,16 @@
 int main(int argc, char** argv) {
   file_reader_t file_reader;
   file_writer_t file_writer;
-  if (get_arguments(argc, argv, &file_reader, &cachesize, &ways, &blocksize) !=
-      NO_ERROR) {
+  if (get_arguments(argc, argv, &file_reader, &file_writer, &cachesize, &ways,
+                    &blocksize) != NO_ERROR) {
+    file_writer_destroy(&file_writer);
+    file_reader_destroy(&file_reader);
     return EXIT_FAILURE;
   }
 
-  file_reader_process(&file_reader, process_and_output, NULL);
+  file_reader_process(&file_reader, process_and_output, &file_writer);
 
+  file_writer_destroy(&file_writer);
+  file_reader_destroy(&file_reader);
   return EXIT_SUCCESS;
 }
