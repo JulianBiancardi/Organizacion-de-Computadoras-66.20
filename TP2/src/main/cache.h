@@ -6,10 +6,6 @@
 
 #define MAIN_MEMORY_SIZE 65536
 
-extern unsigned int ways;
-extern unsigned int cachesize;
-extern unsigned int blocksize;
-
 typedef struct memory {
   unsigned char* data;
 } memory_t;
@@ -36,38 +32,44 @@ typedef struct cache {
   unsigned int last_block;  // TODO consider this
 } cache_t;
 
+extern unsigned int ways;
+extern unsigned int cachesize;
+extern unsigned int blocksize;
+extern cache_t cache;
+extern memory_t memory;
+
 /* Initializes the cache */
-int cache_init(cache_t* self);  // TODO REMOVE THIS PARAMETERS
+int cache_init();  // TODO REMOVE THIS PARAMETERS
 
 /* Receives an address and returns the set which maps to that address. */
-unsigned int cache_find_set(cache_t* self, int address);
+unsigned int cache_find_set(int address);
 
 /* Receives a set number and returns the number of the block least recently
  * used. */
-unsigned int cache_find_lru(cache_t* self, int setnum);
+unsigned int cache_find_lru(int setnum);
 
 /* Receives a set number and a way and returns whether the block is dirty. */
-unsigned int cache_is_dirty(cache_t* self, int way, int setnum);
+unsigned int cache_is_dirty(int way, int setnum);
 
 /* Receives a block address and reads it from memory into the cache. */
-void cache_read_block(cache_t* self, int blocknum);
+void cache_read_block(int blocknum);
 
 /* Receives a set number and a way and writes it into memory. */
-void cache_write_block(cache_t* self, int way, int setnum);
+void cache_write_block(int way, int setnum);
 
 /* Receives an address and returns the byte. */
-unsigned char cache_read_byte(cache_t* self, int address);
+unsigned char cache_read_byte(int address);
 
 /* Receives an address and a byte, which gets written into the address. */
-void cache_write_byte(cache_t* self, int address, unsigned char value);
+void cache_write_byte(int address, unsigned char value);
 
 /* Returns the miss rate from the cache. */
-float cache_get_miss_rate(cache_t* self);
+float cache_get_miss_rate();
 
 /* Returns if the last operation was hit or miss*/
-bool hit(cache_t* self);
+bool hit();
 
 /* Destroys the cache, releasing all of its resources. */
-void cache_uninit(cache_t* self);
+void cache_uninit();
 
 #endif /* CACHE_H */
