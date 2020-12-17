@@ -163,7 +163,7 @@ unsigned char cache_read_byte(int address) {
   unsigned int setnum = cache_find_set(address);
   unsigned int offset = _get_offset(address);
 
-  printf("read address(%i): %u - %u - %u\n", address, tag, setnum, offset);
+  // printf("read address(%i): %u - %u - %u\n", address, tag, setnum, offset);
   for (size_t i = 0; i < ways; i++) {
     if (cache.sets[setnum].blocks[i].valid &&
         cache.sets[setnum].blocks[i].tag == tag) {
@@ -185,7 +185,7 @@ void cache_write_byte(int address, unsigned char value) {
   unsigned int tag = _get_tag(address);
   unsigned int setnum = cache_find_set(address);
   unsigned int offset = _get_offset(address);
-  printf("write address(%i): %u - %u - %u\n", address, tag, setnum, offset);
+  // printf("write address(%i): %u - %u - %u\n", address, tag, setnum, offset);
 
   for (size_t i = 0; i < ways; i++) {
     if (cache.sets[setnum].blocks[i].valid &&
