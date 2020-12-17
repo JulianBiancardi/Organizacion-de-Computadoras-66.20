@@ -8,7 +8,7 @@
 
 int file_writer_init(file_writer_t* self) { self->file = stdout; }
 
-int file_writer_open(file_writer_t* self, char* file_name) {
+int file_writer_open(file_writer_t* self, const char* file_name) {
   if (self->file != stdout) {
     fclose(self->file);
   }

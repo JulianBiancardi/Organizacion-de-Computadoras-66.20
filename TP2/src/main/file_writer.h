@@ -13,12 +13,16 @@ typedef struct file_writer {
 int file_writer_init(file_writer_t* self);
 
 /* Receives a file_name and opens it. */
-int file_writer_open(file_writer_t* self, char* file_name);
+int file_writer_open(file_writer_t* self, const char* file_name);
 
 /* Writes into a file given a stream and a stream_len.
  * Returns the amount of bytes written.
  */
-size_t file_writer_write(file_writer_t* self, char* stream, size_t stream_len);
+size_t file_writer_write(file_writer_t* self, const char* stream,
+                         size_t stream_len);
+
+/* Writes into a file given a formatted string */
+size_t file_writer_print(file_writer_t* self, const char* format, ...);
 
 /* Destroys the file_writer_t */
 void file_writer_destroy(file_writer_t* self);

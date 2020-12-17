@@ -57,11 +57,9 @@ void write(char* instr, file_writer_t* file_writer) {
 }
 
 void missrate(file_writer_t* file_writer) {
-  float miss_rate = cache_get_miss_rate();
-  file_writer_write(file_writer, miss_rate, 1);
+  file_writer_print(file_writer, "MISS-RATE: %.1f %%\n", cache_get_miss_rate());
 }
 
 void error(char* instr, size_t instr_len, file_writer_t* file_writer) {
-  file_writer_write(file_writer, "Invalid instruction: ", 22);
-  file_writer_write(file_writer, instr, strlen(instr));
+  file_writer_print(file_writer, "Invalid instruction: %s\n", instr);
 }
