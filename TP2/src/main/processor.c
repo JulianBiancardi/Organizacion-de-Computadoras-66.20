@@ -16,7 +16,7 @@ void static error();
 void process_and_output(char* instr, size_t instr_len,
                         file_writer_t* file_writer) {
   char* ptr = strchr(instr, ' ');
-  int chars_to_cmp = instr_len;
+  int chars_to_cmp = instr_len - 1;
   if (ptr != NULL) {
     chars_to_cmp = ptr - instr;
   }
@@ -30,7 +30,7 @@ void process_and_output(char* instr, size_t instr_len,
   } else if (strncmp(instr, "W", chars_to_cmp) == 0) {
     write(ptr, file_writer);
   } else {
-    error();
+    error(instr, instr_len, file_writer);
   }
 }
 
@@ -57,11 +57,9 @@ void write(char* instr, file_writer_t* file_writer) {
 }
 
 void missrate(file_writer_t* file_writer) {
-  float miss_rate = cache_get_miss_rate();
-
-  char message[64];
-  int ret = snprintf(message, sizeof message, "%f", miss_rate);
-  file_writer_write(file_writer, message, strlen(message));
+  file_writer_print(file_writer, "MISS-RATE: %.1f %%\n", cache_get_miss_rate());
 }
 
-void error() {}
+void error(char* instr, size_t instr_len, file_writer_t* file_writer) {
+  file_writer_print(file_writer, "Invalid Instruction: %s\n", instr);
+}
