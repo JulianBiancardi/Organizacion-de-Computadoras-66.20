@@ -46,13 +46,13 @@ int static read_args(int argc, char** argv, file_reader_t* file_reader,
       case 'o':
         break;
       case 'w':
-        *w = (unsigned int)strtol(optarg, NULL, 10);
+        *w = (unsigned int)strtoul(optarg, (char**)NULL, 10);
         break;
       case 'c':
-        *cs = (unsigned int)strtol(optarg, NULL, 10);
+        *cs = (unsigned int)strtoul(optarg, (char**)NULL, 10);
         break;
       case 'b':
-        *bs = (unsigned int)strtol(optarg, NULL, 10);
+        *bs = (unsigned int)strtoul(optarg, (char**)NULL, 10);
         break;
       default:
         print_help();
