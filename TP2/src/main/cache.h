@@ -6,9 +6,9 @@
 
 #define MAIN_MEMORY_SIZE 65536
 
-unsigned int ways = 4;
-unsigned int cachesize = 4;
-unsigned int blocksize = 256;
+extern unsigned int ways;
+extern unsigned int cachesize;
+extern unsigned int blocksize;
 
 typedef struct memory {
   unsigned char* data;

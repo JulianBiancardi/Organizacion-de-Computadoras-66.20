@@ -10,6 +10,11 @@
 
 /* Private functions*/
 
+// TODO Move to proper place
+unsigned int ways = 0;
+unsigned int cachesize = 0;
+unsigned int blocksize = 0;
+
 void memory_init(memory_t* memory) {
   memory->data = malloc(MAIN_MEMORY_SIZE);
   memset(memory->data, 0, MAIN_MEMORY_SIZE);
