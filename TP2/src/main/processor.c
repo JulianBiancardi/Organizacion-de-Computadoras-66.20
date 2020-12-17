@@ -10,7 +10,8 @@
 // TODO define function properly and choose better name
 void static error();
 
-void process(char* instr, size_t instr_len) {
+void process_and_output(char* instr, size_t instr_len,
+                        file_writer_t* file_writer) {
   char* ptr = strchr(instr, ' ');
   int chars_to_cmp = instr;
   if (ptr != NULL) {

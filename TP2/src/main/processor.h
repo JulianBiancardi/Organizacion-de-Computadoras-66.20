@@ -3,7 +3,10 @@
 
 #include <stddef.h>
 
-void process(char* line, size_t line_len);
+#include "file_writer.h"
+
+void process_and_output(char* line, size_t line_len,
+                        file_writer_t* file_writer);
 
 void init();
 void read(char* address);
