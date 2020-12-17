@@ -2,6 +2,7 @@
 #define ARGS_PARSER_H
 
 #include "file_reader.h"
+#include "file_writer.h"
 
 /* Receives argc and argv and processes the command to make a decision.
  * If an output file is selected, it is put into output_file.
@@ -13,6 +14,7 @@
  * If the arguments are valid and the program can continue, 0 is returned.
  */
 int get_arguments(int argc, char** argv, file_reader_t* file_reader,
-                  unsigned int* cs, unsigned int* w, unsigned int* bs);
+                  file_writer_t* file_writer, unsigned int* cs, unsigned int* w,
+                  unsigned int* bs);
 
 #endif
