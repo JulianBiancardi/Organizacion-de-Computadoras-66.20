@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "constantsTP2.h"
 
@@ -78,7 +77,7 @@ int static read_args(int argc, char** argv, file_writer_t* file_writer,
   }
 
   if (!w || !cs || !bs) {
-    fprintf(stderr, "Command Error: missing parameters.\n");
+    fprintf(stderr, "Command Error: missing arguments.\n");
     print_help();
     return ERROR;
   }
