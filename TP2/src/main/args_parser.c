@@ -4,29 +4,31 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "constantsTP2.h"
 
-int static read_args(int argc, char** argv, file_reader_t* output,
+int static read_args(int argc, char** argv, file_writer_t* file_writer,
                      unsigned int* cs, unsigned int* w, unsigned int* bs);
 void static print_version();
 void static print_help();
-int static get_output_file(int argc, char** argv, file_reader_t* file_reader);
+int static get_input_file(int argc, char** argv, file_reader_t* file_reader);
 
 int get_arguments(int argc, char** argv, file_reader_t* file_reader,
-                  unsigned int* cs, unsigned int* w, unsigned int* bs) {
-  if (read_args(argc, argv, file_reader, cs, w, bs) != NO_ERROR) {
+                  file_writer_t* file_writer, unsigned int* cs, unsigned int* w,
+                  unsigned int* bs) {
+  if (read_args(argc, argv, file_writer, cs, w, bs) != NO_ERROR) {
     return ERROR;
   }
 
-  if (get_output_file(argc, argv, file_reader) != NO_ERROR) {
+  if (get_input_file(argc, argv, file_reader) != NO_ERROR) {
     return ERROR;
   }
 
   return NO_ERROR;
 }
 
-int static read_args(int argc, char** argv, file_reader_t* file_reader,
+int static read_args(int argc, char** argv, file_writer_t* file_writer,
                      unsigned int* cachesize, unsigned int* ways,
                      unsigned int* blocksize) {
   static struct option arguments[] = {
@@ -41,6 +43,7 @@ int static read_args(int argc, char** argv, file_reader_t* file_reader,
   bool bs = false;
   bool cs = false;
   bool w = false;
+  char* output_file = "stdout";
 
   while (true) {
     int opt = getopt_long(argc, argv, "hVo:w:c:b:", arguments, NULL);
@@ -55,8 +58,7 @@ int static read_args(int argc, char** argv, file_reader_t* file_reader,
         print_version();
         return ERROR;
       case 'o':
-        // FIXME This isnt for file reader
-        file_reader_init(file_reader, optarg);
+        strcpy(output_file, optarg);
         break;
       case 'w':
         *ways = (unsigned int)strtoul(optarg, (char**)NULL, 10);
@@ -81,6 +83,8 @@ int static read_args(int argc, char** argv, file_reader_t* file_reader,
     print_help();
     return ERROR;
   }
+
+  file_writer_init(file_writer, output_file);
 
   return NO_ERROR;
 }
@@ -108,7 +112,7 @@ void static print_help() {
   printf("\ttp2 -w 4 -cs 8 -bs 16 prueba1.mem\n");
 }
 
-int static get_output_file(int argc, char** argv, file_reader_t* file_reader) {
+int static get_input_file(int argc, char** argv, file_reader_t* file_reader) {
   if (argc > optind + 1) {
     fprintf(stderr, "Command Error: Too many arguments provided.\n");
     print_help();
