@@ -43,7 +43,6 @@ int static read_args(int argc, char** argv, file_writer_t* file_writer,
   bool bs = false;
   bool cs = false;
   bool w = false;
-  char* output_file = "stdout";
 
   while (true) {
     int opt = getopt_long(argc, argv, "hVo:w:c:b:", arguments, NULL);
@@ -58,7 +57,7 @@ int static read_args(int argc, char** argv, file_writer_t* file_writer,
         print_version();
         return ERROR;
       case 'o':
-        strcpy(output_file, optarg);
+        file_writer_open(file_writer, optarg);
         break;
       case 'w':
         *ways = (unsigned int)strtoul(optarg, (char**)NULL, 10);
@@ -83,8 +82,6 @@ int static read_args(int argc, char** argv, file_writer_t* file_writer,
     print_help();
     return ERROR;
   }
-
-  file_writer_open(file_writer, output_file);
 
   return NO_ERROR;
 }
