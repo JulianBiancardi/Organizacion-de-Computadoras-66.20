@@ -20,7 +20,7 @@ int file_writer_open(file_writer_t* self, char* file_name);
  */
 size_t file_writer_write(file_writer_t* self, char* stream, size_t stream_len);
 
-/* Destroys a file_writer_t */
+/* Destroys the file_writer_t */
 void file_writer_destroy(file_writer_t* self);
 
 #endif
