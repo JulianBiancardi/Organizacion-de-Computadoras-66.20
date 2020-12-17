@@ -77,11 +77,10 @@ int cache_init(cache_t* self) {
   for (size_t i = 0; i < self->setsnum; i++) {
     self->sets[i].blocks = (block_t*)malloc(sizeof(block_t) * ways);
     for (size_t j = 0; j < ways; j++) {
-      block_t current_block = self->sets[i].blocks[j];
-      current_block.data = calloc(blocksize, sizeof(unsigned char));
-      current_block.valid = false;
-      current_block.dirty = false;
-      current_block.date = 0;
+      self->sets[i].blocks[j].data = calloc(blocksize, sizeof(unsigned char));
+      self->sets[i].blocks[j].valid = false;
+      self->sets[i].blocks[j].dirty = false;
+      self->sets[i].blocks[j].date = 0;
     }
   }
 
@@ -118,13 +117,7 @@ unsigned int cache_find_lru(cache_t* self, int setnum) {
 }
 
 unsigned int cache_is_dirty(cache_t* self, int way, int setnum) {
-  if (setnum < 0 || setnum > self->setsnum) {
-    return (unsigned int)ERROR;
-  }
-  if (way < 0 || way > ways) {
-    return (unsigned int)ERROR;
-  }
-  return self->sets[setnum].blocks[way].dirty;
+  return (self->sets[setnum].blocks[way].dirty);
 }
 
 void cache_read_block(cache_t* self, int blocknum) {
@@ -132,21 +125,22 @@ void cache_read_block(cache_t* self, int blocknum) {
   unsigned int setnum = cache_find_set(self, blocknum << bit_offset);
   unsigned int way = cache_find_lru(self, setnum);  // Find the lru block
 
-  // Verify if the block is dirty
-  block_t current_block = self->sets[setnum].blocks[way];
-  if (current_block.valid && current_block.dirty) {
-    cache_write_block(self, way, setnum);  // Write the block in memory
+  // Verify if the block is dirty and write the block in memory
+  if (self->sets[setnum].blocks[way].valid &&
+      cache_is_dirty(self, way, setnum)) {
+    cache_write_block(self, way, setnum);
   }
 
   // Write the block with the memory data
   for (size_t i = 0; i < blocksize; i++) {
-    current_block.data[i] = self->memory->data[blocknum * blocksize + i];
+    self->sets[setnum].blocks[way].data[i] =
+        self->memory->data[blocknum * blocksize + i];
   }
 
-  // current_block.numero = ++cache.ultimoBloque;
-  current_block.dirty = false;
-  current_block.valid = true;
-  current_block.tag = _get_tag(self, blocknum * blocksize);
+  // current_block.numero = ++cache.ultimoBloque; //TODO
+  self->sets[setnum].blocks[way].dirty = false;
+  self->sets[setnum].blocks[way].valid = true;
+  self->sets[setnum].blocks[way].tag = _get_tag(self, blocknum * blocksize);
 }
 
 void cache_write_block(cache_t* self, int way, int setnum) {
@@ -167,11 +161,11 @@ unsigned char cache_read_byte(cache_t* self, int address) {
   unsigned int tag = _get_tag(self, address);
   unsigned int offset = _get_offset(self, address);
   for (size_t i = 0; i < ways; i++) {
-    block_t current_block = self->sets[setnum].blocks[i];
-    if (current_block.valid && current_block.tag == tag) {
+    if (self->sets[setnum].blocks[i].valid &&
+        self->sets[setnum].blocks[i].tag == tag) {
       (self->hits)++;
       self->last_satuts = HIT;
-      return current_block.data[offset];
+      return self->sets[setnum].blocks[i].data[offset];
     }
   }
   // El dato no se encuentra en cache => cargo el bloque y devuelvo el dato.
@@ -188,11 +182,11 @@ void cache_write_byte(cache_t* self, int address, unsigned char value) {
   unsigned int tag = _get_tag(self, address);
   unsigned int offset = _get_offset(self, address);
   for (size_t i = 0; i < ways; i++) {
-    block_t current_block = self->sets[setnum].blocks[i];
-    if (current_block.valid && current_block.tag == tag) {
+    if (self->sets[setnum].blocks[i].valid &&
+        self->sets[setnum].blocks[i].tag == tag) {
       (self->hits)++;
       self->last_satuts = HIT;
-      current_block.data[offset] = value;
+      self->sets[setnum].blocks[i].data[offset] = value;
       return;
     }
   }
