@@ -1,3 +1,4 @@
+.text
 j		label
 addi	$t1, $zero, 12		
 sub 	$zero, $zero, $zero 

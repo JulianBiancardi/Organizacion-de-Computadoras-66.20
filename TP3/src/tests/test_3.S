@@ -1,6 +1,7 @@
+.text
 nop
 addi	$t0, $t0, 20 
-sw      $t2, 0($t0)     
+sw      $t0, 0($t0)     # Hazardous. Requires NOP betwen SW and JR
 jr		$t0
 nor     $t1, $t3, $t2       
 addi	$t1, $zero, 12	# Jumped to Here	

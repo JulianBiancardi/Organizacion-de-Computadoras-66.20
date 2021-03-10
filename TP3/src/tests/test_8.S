@@ -1,3 +1,4 @@
+.text
 addi	$t0, $zero, 8   
 or      $t0, $zero, $t0
 j		label					

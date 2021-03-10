@@ -1,3 +1,4 @@
+.text
 nop
 addi	$t0, $t0, 20   	
 sw      $t2, 0($t0)     

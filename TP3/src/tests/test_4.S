@@ -1,3 +1,4 @@
+.text
 addi	$t0, $zero, 16    	
 jalr	$ra, $t0					
 addi	$t1, $zero, 12		

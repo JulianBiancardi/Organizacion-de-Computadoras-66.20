@@ -1,3 +1,4 @@
+.text
 addi	$t0, $zero, 8     	
 jr		$t0					
 sw      $t2, 0($t0)         # Jumped to Here

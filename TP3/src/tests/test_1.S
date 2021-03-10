@@ -1,3 +1,4 @@
+.text
 addi	$t0, $zero, 16    	
 jr		$t0					
 addi	$t1, $zero, 12		
